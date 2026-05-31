@@ -138,20 +138,25 @@
     <!-- شريط التنقل (Navbar) — هوية بنّية ذهبية مطابقة للصفحة الرئيسية -->
     <header class="sticky top-0 z-50 bg-ink border-b-2 border-gold-500/70 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 relative flex items-center justify-center">
-            <!-- أيقونة إضافة محتوى -->
-            <button id="addBtn" type="button" aria-label="إضافة باب أو قسم أو حديث أو آية"
-                class="absolute left-4 sm:left-6 lg:left-8 inline-flex items-center gap-2 rounded-xl bg-gold-500 hover:bg-gold-300 text-ink px-3 py-2 shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M12 4v16m8-8H4"/></svg>
-                <span class="hidden sm:inline text-sm font-bold">إضافة</span>
-            </button>
+            
+            <!-- زر العودة للرئيسية (يمين) -->
+            <a href="index.html" class="absolute right-4 sm:right-6 lg:right-8 inline-flex items-center gap-2 rounded-xl border border-gold-500/30 bg-ink hover:bg-gold-500/10 text-gold-500 px-3 py-2 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40" aria-label="العودة للرئيسية">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="hidden sm:inline text-sm font-bold tracking-wide">الرئيسية</span>
+            </a>
 
             <!-- الاسم في المنتصف -->
             <a href="#" class="group" aria-label="المتجر الرابح">
                 <h1 class="font-naskh font-bold text-xl sm:text-2xl text-gold-300 tracking-wide">المتجر الرابح</h1>
             </a>
 
-            <!-- وسم المستودع -->
-            <span class="hidden md:block absolute right-4 sm:right-6 lg:right-8 text-xs font-bold tracking-[0.2em] text-gold-500/80">DIGITAL REPOSITORY</span>
+            <!-- أيقونة إضافة محتوى (يسار) -->
+            <button id="addBtn" type="button" aria-label="إضافة باب أو قسم أو حديث أو آية"
+                class="absolute left-4 sm:left-6 lg:left-8 inline-flex items-center gap-2 rounded-xl bg-gold-500 hover:bg-gold-300 text-ink px-3 py-2 shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M12 4v16m8-8H4"/></svg>
+                <span class="hidden sm:inline text-sm font-bold">إضافة</span>
+            </button>
+
         </div>
     </header>
 
@@ -430,7 +435,8 @@
                         title: "ثواب من شهد ميتا وصلى عليه",
                         hadiths: [
                             { text: "من اتبع جنازة مسلم إيمانا واحتسابا وكان معه حتى يصلى عليها ويفرغ من دفنها، فإنه يرجع من الأجر بقيراطين...", narrator: "رواه البخاري ومسلم" },
-                            { text: "ما من ميت يصلي عليه أمة من المسلمين يبلغون مائة كلهم يشفعون له إلا شفعوا فيه", narrator: "رواه مسلم" }
+                            { text: "ما من ميت يصلي عليه أمة من المسلمين يبلغون مائة كلهم يشفعون له إلا شفعوا فيه", narrator: "رواه مسلم" },
+                            { text: "ما من ميت تصلي عليه أمة من المسلمين يبلغون مائة كلهم يشفعون له إلا شفعوا فيه", narrator: "رواه مسلم" }
                         ]
                     },
                     {
