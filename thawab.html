@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- الحظر الصارم لمحركات البحث (الأمان والخصوصية) -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>المتجر الرابح | Hejaili Digital Repository</title>
+
+    <!-- أيقونة الموقع (SVG مضمّنة) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315803d'/%3E%3Ctext x='16' y='22' font-size='18' font-family='serif' fill='white' text-anchor='middle'%3E%D8%AB%3C/text%3E%3C/svg%3E">
+
+    <!-- تحميل مكتبة Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- إعدادات Tailwind المخصصة -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                        naskh: ['Amiri', 'Tajawal', 'serif'],
+                    },
+                    colors: {
+                        // البنّي (الهوية الأساسية) — مستوحى من ترويسة HEJAILI
+                        brand: {
+                            50:  '#f6efe0',
+                            100: '#e9dcc2',
+                            200: '#d8c39c',
+                            300: '#c2a86f',
+                            400: '#a07d4a',
+                            500: '#7c5f37',
+                            600: '#5f4a2b',
+                            700: '#4a3924',
+                            800: '#362a19',
+                            900: '#2a2013',
+                            950: '#1b140b',
+                        },
+                        // الذهبي العتيق (لون التمييز)
+                        gold: {
+                            50:  '#faf4e4',
+                            100: '#f1e6c6',
+                            300: '#dcc079',
+                            500: '#c19a3e',
+                            700: '#9a7a26',
+                        },
+                        // الورق (الخلفيات الكريمية)
+                        paper: {
+                            DEFAULT: '#f0e8d6',
+                            card: '#f7f1e3',
+                            deep: '#e6dcc3',
+                        },
+                        ink: '#2e2417',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(12px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pop: {
+                            '0%': { opacity: '0', transform: 'scale(.96)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    },
+                    animation: {
+                        fadeUp: 'fadeUp .5s ease both',
+                        pop: 'pop .35s ease both',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- تحميل الخطوط العربية: تجوال للواجهة، وأميري للنصوص الشريفة -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* شريط التمرير (دافئ) */
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
+        ::-webkit-scrollbar-track { background: #efe6d3; }
+        ::-webkit-scrollbar-thumb { background: #cbb98f; border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b09a6a; }
+        html { scrollbar-color: #cbb98f #efe6d3; }
+
+        /* شريط زجاجي كريمي (لشريط الأبواب) */
+        .glass-header {
+            background: rgba(244, 237, 221, 0.85);
+            backdrop-filter: saturate(160%) blur(12px);
+            -webkit-backdrop-filter: saturate(160%) blur(12px);
+        }
+
+        /* خلفية كريمية بزخرفة دوائر مطابقة للصفحة الرئيسية */
+        body {
+            background-color: #f0e8d6;
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(193,154,62,0.10), transparent 60%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cg fill='none' stroke='%23b89a52' stroke-opacity='0.10' stroke-width='1'%3E%3Ccircle cx='27' cy='27' r='12'/%3E%3Ccircle cx='0' cy='0' r='12'/%3E%3Ccircle cx='54' cy='0' r='12'/%3E%3Ccircle cx='0' cy='54' r='12'/%3E%3Ccircle cx='54' cy='54' r='12'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hadith-naskh {
+            font-family: 'Amiri', 'Tajawal', serif;
+            line-height: 2.05;
+        }
+
+        /* خط زخرفي تحت العناوين */
+        .title-rule::after {
+            content: "";
+            display: block;
+            width: 64px;
+            height: 3px;
+            margin: 14px auto 0;
+            border-radius: 99px;
+            background: linear-gradient(90deg, transparent, #c19a3e, transparent);
+        }
+
+        .focus-ring:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(193,154,62,0.25);
+            border-color: #c19a3e;
+        }
+
+        mark.hl { background: #f0dca0; color: #2e2417; border-radius: 4px; padding: 0 3px; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body class="text-stone-800 antialiased min-h-screen flex flex-col">
+
+    <!-- شريط التنقل (Navbar) — هوية بنّية ذهبية مطابقة للصفحة الرئيسية -->
+    <header class="sticky top-0 z-50 bg-ink border-b-2 border-gold-500/70 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 relative flex items-center justify-center">
+            <!-- أيقونة إضافة محتوى -->
+            <button id="addBtn" type="button" aria-label="إضافة باب أو قسم أو حديث أو آية"
+                class="absolute left-4 sm:left-6 lg:left-8 inline-flex items-center gap-2 rounded-xl bg-gold-500 hover:bg-gold-300 text-ink px-3 py-2 shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M12 4v16m8-8H4"/></svg>
+                <span class="hidden sm:inline text-sm font-bold">إضافة</span>
+            </button>
+
+            <!-- الاسم في المنتصف -->
+            <a href="#" class="group" aria-label="المتجر الرابح">
+                <h1 class="font-naskh font-bold text-xl sm:text-2xl text-gold-300 tracking-wide">المتجر الرابح</h1>
+            </a>
+
+            <!-- وسم المستودع -->
+            <span class="hidden md:block absolute right-4 sm:right-6 lg:right-8 text-xs font-bold tracking-[0.2em] text-gold-500/80">DIGITAL REPOSITORY</span>
+        </div>
+    </header>
+
+    <!-- شريط الأبواب الثابت أعلى الصفحة -->
+    <nav id="chaptersBar" aria-label="الأبواب" class="glass-header sticky top-16 z-40 border-b border-paper-deep shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-2">
+                <span class="hidden md:flex items-center gap-1.5 shrink-0 text-xs font-bold text-brand-700 pl-2 border-l border-paper-deep ml-1 my-2">
+                    <svg class="w-4 h-4 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    الأبواب
+                </span>
+                <!-- سهم لتحريك الأسماء (يمين) -->
+                <button id="chScrollStart" type="button" aria-label="تحريك الأبواب يميناً"
+                    class="shrink-0 my-1.5 inline-flex items-center justify-center w-8 h-8 rounded-lg border border-paper-deep bg-paper-card text-brand-700 hover:bg-gold-500 hover:text-ink hover:border-gold-500 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/30">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <div id="chaptersList" class="flex gap-2 overflow-x-auto py-2.5 grow hide-scrollbar scroll-smooth"></div>
+                <!-- سهم لتحريك الأسماء (يسار) -->
+                <button id="chScrollEnd" type="button" aria-label="تحريك الأبواب يساراً"
+                    class="shrink-0 my-1.5 inline-flex items-center justify-center w-8 h-8 rounded-lg border border-paper-deep bg-paper-card text-brand-700 hover:bg-gold-500 hover:text-ink hover:border-gold-500 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/30">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- محرك البحث والإحصاءات -->
+        <section class="mb-8 animate-fadeUp">
+            <div class="relative max-w-md mx-auto">
+                <label for="searchInput" class="sr-only">ابحث في الأحاديث والأبواب والرواة</label>
+                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="search" id="searchInput" autocomplete="off"
+                    class="focus-ring block w-full pr-10 pl-10 py-2.5 border-2 border-paper-deep rounded-xl bg-paper-card placeholder-brand-400 text-sm text-brand-900 transition-all shadow-sm hover:border-gold-300"
+                    placeholder="ابحث في الأحاديث، الأبواب، أو الرواة...">
+                <button id="clearSearch" type="button" aria-label="مسح البحث"
+                    class="hidden absolute inset-y-0 left-0 pl-3.5 items-center text-brand-400 hover:text-brand-700 transition-colors">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- شريط الإحصاءات -->
+            <div id="statsBar" class="flex items-center justify-center gap-6 sm:gap-10 mt-6 text-center text-stone-600"></div>
+        </section>
+
+        <!-- منطقة العرض الرئيسية -->
+        <div id="main-content" class="w-full">
+
+            <!-- عنوان الباب النشط -->
+            <div id="selectedChapterHeader" class="text-center mb-7">
+                <h2 id="selectedChapterTitle" class="font-naskh inline-block px-8 py-3 bg-paper-card text-brand-800 rounded-2xl border border-paper-deep text-xl md:text-2xl font-bold shadow-sm"></h2>
+            </div>
+
+            <!-- حاوية الأقسام (Tabs) -->
+            <div id="sectionsContainer" class="hidden mb-8 bg-paper-card/70 p-2 rounded-2xl shadow-sm border border-paper-deep flex flex-wrap justify-center gap-2"></div>
+
+            <!-- حاوية الأحاديث -->
+            <div id="hadithsContainer" class="space-y-6"></div>
+
+            <!-- حاوية نتائج البحث -->
+            <div id="searchResultsContainer" class="hidden space-y-6"></div>
+
+        </div>
+    </main>
+
+    <!-- زر العودة للأعلى -->
+    <button id="backToTop" aria-label="العودة إلى الأعلى"
+        class="fixed bottom-6 left-6 z-40 hidden h-11 w-11 items-center justify-center rounded-full bg-brand-700 text-white shadow-lg shadow-brand-700/30 hover:bg-brand-800 transition-all">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+    </button>
+
+    <!-- التذييل -->
+    <footer class="bg-brand-800 border-t-2 border-gold-500/40 py-5 mt-12"></footer>
+
+    <!-- نافذة إضافة المحتوى -->
+    <div id="addModal" class="fixed inset-0 z-[60] hidden">
+        <div id="addOverlay" class="absolute inset-0 bg-stone-900/50 backdrop-blur-sm"></div>
+        <div class="relative min-h-full flex items-center justify-center p-4">
+            <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-stone-200 animate-pop max-h-[90vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+                <!-- الرأس -->
+                <div class="flex items-center justify-between p-5 border-b border-stone-100">
+                    <h3 id="addTitle" class="font-bold text-lg text-stone-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        إضافة محتوى جديد
+                    </h3>
+                    <button id="addClose" type="button" aria-label="إغلاق" class="text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-lg p-1.5 transition-colors">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <!-- منتقي النوع -->
+                <div class="p-5 pb-0">
+                    <div id="addTypes" class="grid grid-cols-4 gap-2"></div>
+                </div>
+                <!-- الحقول الديناميكية -->
+                <form id="addForm" class="p-5 space-y-4 overflow-y-auto" onsubmit="return false;">
+                    <div id="addFields" class="space-y-4"></div>
+                </form>
+                <!-- التذييل -->
+                <div class="flex items-center justify-between gap-2 p-4 border-t border-stone-100 bg-stone-50 rounded-b-2xl">
+                    <div class="flex items-center gap-1">
+                        <button id="exportBtn" type="button" title="تصدير كل البيانات كملف JSON" class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-500 hover:text-brand-700 hover:bg-white border border-transparent hover:border-stone-200 px-2.5 py-2 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+                            تصدير
+                        </button>
+                        <button id="resetBtn" type="button" title="استعادة البيانات الأصلية" class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-500 hover:text-red-600 hover:bg-white border border-transparent hover:border-stone-200 px-2.5 py-2 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 0119 5"/></svg>
+                            استعادة
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="addCancel" type="button" class="px-4 py-2 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-100 transition-colors">إلغاء</button>
+                        <button id="addSave" type="button" class="px-5 py-2 rounded-xl text-sm font-bold text-white bg-brand-700 hover:bg-brand-800 shadow-sm shadow-brand-700/20 transition-colors">حفظ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- إشعار النسخ -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -transtone-x-1/2 z-50 hidden items-center gap-2 bg-stone-900 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg">
+        <svg class="w-4 h-4 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        <span id="toastMsg">تم النسخ</span>
+    </div>
+
+    <!-- المنطق البرمجي (JavaScript) -->
+    <script>
+        // قاعدة البيانات المحلية (JSON)
+        let database = [
+            {
+                id: 1, title: "أبواب العلم",
+                sections: [
+                    {
+                        title: "ثواب العلم والعلماء وفضلهم",
+                        hadiths: [
+                            { text: "من يرد الله به خيرا يفقهه في الدين، وإنما أنا قاسم، ولن يزال أمر هذه الأمة مستقيما حتى تقوم الساعة وحتى يأتي أمر الله", narrator: "رواه البخاري ومسلم" },
+                            { text: "لا حسد إلا في اثنتين: رجل آتاه الله مالا فسلطه على هلكته في الحق، ورجل آتاه الله الحكمة فهو يقضي بها ويعلمها", narrator: "رواه البخاري ومسلم" },
+                            { text: "الدنيا ملعونة، ملعون ما فيها إلا ذكر الله وما والاه، وعالما أو متعلما", narrator: "رواه ابن ماجه والترمذي وقال: حديث حسن" },
+                            { text: "إن الله وملائكته وأهل السموات والأرض، حتى النملة في جحرها، وحتى الحوت في البحر ليصلون على معلمي الناس الخير", narrator: "رواه الترمذي وقال: حديث حسن صحيح" }
+                        ]
+                    },
+                    {
+                        title: "ثواب طلب العلم وتعليمه لوجه الله",
+                        hadiths: [
+                            { text: "الحكمة ضالة المؤمن فحيث وجدها فهو أحق بها", narrator: "رواه الترمذي وقال: حديث حسن" },
+                            { text: "من جاء مسجدي هذا لم يأته إلا لخير يتعلمه أو يعلمه، فهو بمنزلة المجاهد في سبيل الله، ومن جاء لغير ذلك فهو بمنزلة الرجل ينظر إلى متاع غير", narrator: "رواه الترمذي وقال: حديث حسن" },
+                            { text: "موت قبيلة أيسر من موت عالم", narrator: "رواه أبو داود وابن حبان والبيهقي" }
+                        ]
+                    },
+                    {
+                        title: "ثواب من ترك المراء والجدال",
+                        hadiths: [
+                            { text: "من ترك المراء وهو مبطل بُنِي له بيت في ربض الجنة، ومن ترك المراء وهو محق بُنِي له بيت في وسطها، ومن حسن خلقه بُنِي له بيت في أعلاها", narrator: "رواه أبو داود وابن ماجه والترمذي وقال: حديث حسن" }
+                        ]
+                    },
+                    {
+                        title: "ثواب تعليم العلم وتصنيفه وروايته",
+                        hadiths: [
+                            { text: "إذا مات ابن آدم انقطع عمله إلا من ثلاث: صدقة جارية، أو علم ينتفع به، أو ولد صالح يدعو له", narrator: "رواه مسلم" },
+                            { text: "من دعا إلى هدى كان له من الأجر مثل أجور من تبعه لا ينقص ذلك من أجورهم شيئا، ومن دعا إلى ضلالة كان عليه من الإثم مثل آثام من تبعه لا ينقص ذلك من آثامهم شيئا", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2, title: "أبواب الطهارة",
+                sections: [
+                    {
+                        title: "ثواب الوضوء وإسباغه",
+                        hadiths: [
+                            { text: "إذا توضأ العبد المسلم فغسل وجهه خرج من وجهه كل خطيئة نظر إليها بعينيه مع الماء، فإذا غسل يديه خرج من يديه كل خطيئة كان بطشتها يداه، فإذا غسل رجليه خرجت كل خطيئة مشتها رجلاه مع الماء حتى يخرج نقيا من الذنوب", narrator: "رواه مسلم" },
+                            { text: "ما من امرئ يتوضأ فيحسن وضوءه ثم يصلي الصلاة إلا غفر له ما بينه وبين الصلاة الأخرى حتى يصليها", narrator: "رواه مسلم والنسائي" }
+                        ]
+                    },
+                    {
+                        title: "ثواب إسباغ الوضوء",
+                        hadiths: [
+                            { text: "إن أمتي يدعون يوم القيامة غرا محجلين من آثار الوضوء، فمن استطاع منكم أن يطيل غرته فليفعل", narrator: "رواه البخاري ومسلم" },
+                            { text: "تبلغ الحلية من المؤمن حيث يبلغ الوضوء", narrator: "رواه مسلم" },
+                            { text: "إسباغ الوضوء على المكاره، وكثرة الخطا إلى المساجد، وانتظار الصلاة بعد الصلاة، فذلكم الرباط لله فذلكم الرباط لله فذلكم الرباط لله", narrator: "رواه مسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب السواك",
+                        hadiths: [
+                            { text: "السواك مطهرة للفم مرضاة للرب", narrator: "رواه البخاري" },
+                            { text: "لولا أن أشق على أمتي لأمرتهم بالسواك عند كل صلاة", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب ما يقول بعد الوضوء",
+                        hadiths: [
+                            { text: "ما منكم من أحد يتوضأ فيبلغ فيسبغ الوضوء، ثم يقول: أشهد أن لا إله إلا الله وحده لا شريك له، وأشهد أن محمدا عبده ورسوله، إلا فتحت له أبواب الجنة الثمانية يدخل من أيها شاء", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3, title: "أبواب الصلاة",
+                sections: [
+                    {
+                        title: "ثواب المؤذن ومن أجابه ودعا",
+                        hadiths: [
+                            { text: "لا يسمع صوته شجر ولا مدر ولا حجر ولا جن ولا إنس إلا شهد له", narrator: "رواه البخاري" },
+                            { text: "لو يعلم الناس ما في النداء والصف الأول، ثم لم يجدوا إلا أن يستهموا عليه لاستهموا", narrator: "رواه البخاري ومسلم" },
+                            { text: "إذا نودي بالصلاة أدبر الشيطان وله ضراط حتى لا يسمع التأذين", narrator: "رواه البخاري ومسلم" },
+                            { text: "من قال حين يسمع المؤذن: وأنا أشهد أن لا إله إلا الله... غفر الله له ذنوبه", narrator: "رواه مسلم" },
+                            { text: "من قال حين يسمع النداء: اللهم رب هذه الدعوة التامة والصلاة القائمة، آت محمدا الوسيلة والفضيلة... حلت له شفاعتي يوم القيامة", narrator: "رواه البخاري" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الصلاة المفروضة ومطلقا",
+                        hadiths: [
+                            { text: "الطهور شطر الإيمان، والحمد لله تملأ الميزان... والصلاة نور", narrator: "رواه مسلم" },
+                            { text: "تعبد الله لا تشرك به شيئا، وتقيم الصلاة المكتوبة، وتؤتي الزكاة المفروضة، وتصوم رمضان", narrator: "رواه البخاري ومسلم" },
+                            { text: "الصلوات الخمس والجمعة إلى الجمعة كفارة لما بينهن ما لم تُغش الكبائر", narrator: "رواه مسلم" },
+                            { text: "من صلى الصبح فهو في ذمة الله، فلا يطلبنكم الله من ذمته بشيء", narrator: "رواه مسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب صلاة الجماعة والمساجد",
+                        hadiths: [
+                            { text: "صلاة الجماعة أفضل من صلاة الفذ بسبع وعشرين درجة", narrator: "رواه البخاري ومسلم" },
+                            { text: "من صلى العشاء في جماعة فكأنما قام نصف الليل، ومن صلى الصبح في جماعة فكأنما صلى الليل كله", narrator: "رواه مسلم وأبو داود والترمذي" },
+                            { text: "من بنى مسجدا يبتغي به وجه الله عز وجل بنى الله له بيتا في الجنة", narrator: "رواه البخاري ومسلم" },
+                            { text: "من غدا إلى المسجد أو راح أعدّ الله له في الجنة نزلا كلما غدا أو راح", narrator: "رواه مسلم" },
+                            { text: "صلاة في مسجدي هذا خير من ألف صلاة فيما سواه إلا المسجد الحرام", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4, title: "أبواب صلاة التطوع",
+                sections: [
+                    {
+                        title: "ثواب صلاة التطوع والسنن",
+                        hadiths: [
+                            { text: "إذا قضى أحدكم الصلاة في مسجده فليجعل لبيته نصيبا من صلاته، فإن الله جاعل في بيته من صلاته خيرا", narrator: "رواه مسلم" },
+                            { text: "ما من عبد مسلم يصلي لله تعالى في كل يوم ثنتي عشرة ركعة تطوعا غير فريضة، إلا بنى الله له بيتا في الجنة", narrator: "رواه مسلم والترمذي" },
+                            { text: "ركعتا الفجر خير من الدنيا وما فيها", narrator: "رواه مسلم" },
+                            { text: "قال الله عز وجل: ابن آدم صلِّ لي أربع ركعات من أول النهار أكفك آخره", narrator: "رواه أحمد" }
+                        ]
+                    },
+                    {
+                        title: "ثواب التهجد وقيام الليل",
+                        hadiths: [
+                            { text: "أفضل الصيام بعد رمضان شهر الله المحرم، وأفضل الصلاة بعد الفريضة صلاة الليل", narrator: "رواه مسلم" },
+                            { text: "إن في الليل لساعة لا يوافقها رجل مسلم يسأل الله خيرا من خير الدنيا والآخرة إلا أعطاه إياه، وذلك كل ليلة", narrator: "رواه مسلم" },
+                            { text: "أفلا أكون عبدا شكورا", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 5, title: "أبواب الجمعة",
+                sections: [
+                    {
+                        title: "ثواب صلاة الجمعة وفضل يومها",
+                        hadiths: [
+                            { text: "خير يوم طلعت عليه الشمس يوم الجمعة، فيه خلق آدم، وفيه دخل الجنة، وفيه أخرج منها", narrator: "رواه مسلم" },
+                            { text: "فيها ساعة لا يوافقها عبد مسلم وهو قائم يصلي يسأل الله تعالى شيئا إلا أعطاه إياه", narrator: "رواه البخاري ومسلم" },
+                            { text: "من اغتسل يوم الجمعة غسل الجنابة ثم راح في الساعة الأولى فكأنما قرب بدنة...", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 6, title: "أبواب الجنائز",
+                sections: [
+                    {
+                        title: "ثواب من شهد ميتا وصلى عليه",
+                        hadiths: [
+                            { text: "من اتبع جنازة مسلم إيمانا واحتسابا وكان معه حتى يصلى عليها ويفرغ من دفنها، فإنه يرجع من الأجر بقيراطين...", narrator: "رواه البخاري ومسلم" },
+                            { text: "ما من ميت يصلي عليه أمة من المسلمين يبلغون مائة كلهم يشفعون له إلا شفعوا فيه", narrator: "رواه مسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الشهادة والطاعون والمصيبة",
+                        hadiths: [
+                            { text: "الطاعون شهادة لكل مسلم", narrator: "رواه البخاري ومسلم" },
+                            { text: "من قتل في سبيل الله فهو شهيد، ومن مات في سبيل الله فهو شهيد...", narrator: "رواه البخاري ومسلم" },
+                            { text: "ما من عبد تصيبه مصيبة فيقول: إنا لله وإنا إليه راجعون... إلا آجره الله تعالى في مصيبته وأخلف له خيرا منها", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 7, title: "أبواب الصدقات",
+                sections: [
+                    {
+                        title: "ثواب الصدقة وفضلها",
+                        hadiths: [
+                            { text: "ما نقصت صدقة من مال، وما زاد الله عبدا بعفو إلا عزا، وما تواضع أحد لله إلا رفعه الله عز وجل", narrator: "رواه مسلم" },
+                            { text: "فاتقوا النار ولو بشق تمرة", narrator: "رواه البخاري ومسلم" },
+                            { text: "إن صدقة السر تطفئ غضب الرب تبارك وتعالى", narrator: "إسناده حسن" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الإنفاق وإطعام الطعام",
+                        hadiths: [
+                            { text: "اعبدوا الرحمن، وأطعموا الطعام، وأفشوا السلام تدخلوا الجنة بسلام", narrator: "رواه الترمذي" },
+                            { text: "ما من مسلم يغرس غرسا أو يزرع زرعا، فيأكل منه طير أو إنسان إلا كان له به صدقة", narrator: "رواه البخاري ومسلم" },
+                            { text: "ما من يوم يصبح العباد فيه إلا وملكان ينزلان، فيقول أحدهما: اللهم أعط منفقا خلفا...", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب التيسير والقرض",
+                        hadiths: [
+                            { text: "من نفس عن مؤمن كربة من كرب الدنيا، نفس الله عنه كربة من كرب يوم القيامة، ومن يسر على معسر في الدنيا يسر الله عليه...", narrator: "رواه مسلم" },
+                            { text: "من أنظر معسرا أو وضع له، أظله الله يوم القيامة تحت ظل عرشه", narrator: "رواه الترمذي" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 8, title: "أبواب الصوم",
+                sections: [
+                    {
+                        title: "ثواب الصوم ورمضان",
+                        hadiths: [
+                            { text: "إن في الجنة بابا يقال له الريان، يدخل منه الصائمون يوم القيامة...", narrator: "رواه البخاري ومسلم" },
+                            { text: "من صام رمضان إيمانا واحتسابا غفر له ما تقدم من ذنبه", narrator: "رواه البخاري ومسلم" },
+                            { text: "إذا جاء رمضان فتحت أبواب الجنة وغلقت أبواب النار وصفدت الشياطين", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب صيام التطوع",
+                        hadiths: [
+                            { text: "صيام يوم عرفة إني أحتسب على الله أن يكفر السنة التي بعده والسنة التي قبله", narrator: "رواه مسلم" },
+                            { text: "صوم ثلاثة أيام من كل شهر صوم الدهر كله", narrator: "رواه البخاري ومسلم" },
+                            { text: "تعرض الأعمال يوم الاثنين والخميس، فأحب أن يعرض عملي وأنا صائم", narrator: "رواه الترمذي" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 9, title: "أبواب الحج",
+                sections: [
+                    {
+                        title: "ثواب الحج والعمرة والأضحية",
+                        hadiths: [
+                            { text: "من حج فلم يرفث ولم يفسق، خرج من ذنوبه كيوم ولدته أمه", narrator: "رواه البخاري ومسلم" },
+                            { text: "العمرة إلى العمرة كفارة لما بينهما، والحج المبرور ليس له جزاء إلا الجنة", narrator: "رواه البخاري ومسلم" },
+                            { text: "إنها تعدل حجة معي — عمرة في رمضان", narrator: "رواه البخاري ومسلم" },
+                            { text: "ما عمل آدمي من عمل يوم النحر أحب إلى الله من إهراق الدم...", narrator: "رواه الترمذي" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 10, title: "أبواب الجهاد",
+                sections: [
+                    {
+                        title: "ثواب الجهاد والرباط",
+                        hadiths: [
+                            { text: "رباط يوم في سبيل الله خير من الدنيا وما عليها...", narrator: "رواه البخاري ومسلم" },
+                            { text: "من اغبرت قدماه في سبيل الله، فهما حرام على النار", narrator: "رواه البخاري والترمذي" },
+                            { text: "عينان لا تمسهما النار: عين بكت من خشية الله، وعين باتت تحرس في سبيل الله", narrator: "رواه الترمذي" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الشهيد",
+                        hadiths: [
+                            { text: "ما يجد الشهيد من مس القتل إلا كما يجد أحدكم من مس القرصة", narrator: "رواه النسائي والترمذي" },
+                            { text: "يغفر للشهيد كل ذنب إلا الدين", narrator: "رواه مسلم" },
+                            { text: "أرواحهم في جوف طير خضر لها قناديل معلقة بالعرش...", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 11, title: "أبواب قراءة القرآن",
+                sections: [
+                    {
+                        title: "ثواب من تعلم القرآن أو تلاه",
+                        hadiths: [
+                            { text: "اقرؤوا القرآن فإنه يأتي يوم القيامة شفيعا لأصحابه", narrator: "رواه مسلم" },
+                            { text: "يقال لصاحب القرآن: اقرأ وارقَ ورتل كما كنت ترتل في الدنيا فإن منزلك عند آخر آية تقرؤها", narrator: "رواه أبو داود والترمذي" },
+                            { text: "ما اجتمع قوم في بيت من بيوت الله يتلون كتاب الله ويتدارسونه بينهم، إلا نزلت عليهم السكينة وغشيتهم الرحمة وحفتهم الملائكة وذكرهم الله فيمن عنده", narrator: "رواه مسلم" },
+                            { text: "الماهر بالقرآن مع السفرة الكرام البررة، والذي يقرأ القرآن ويتتعتع فيه وهو عليه شاق له أجران", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب سور معينة",
+                        hadiths: [
+                            { text: "اقرؤوا سورة البقرة، فإن أخذها بركة وتركها حسرة ولا تستطيعها البطلة", narrator: "رواه مسلم" },
+                            { text: "من قرأ بالآيتين من آخر سورة البقرة في ليلة كفتاه", narrator: "رواه البخاري ومسلم" },
+                            { text: "من حفظ عشر آيات من أول سورة الكهف عُصم من الدجال", narrator: "رواه مسلم" },
+                            { text: "والذي نفسي بيده إنها لتعدل ثلث القرآن (سورة الإخلاص)", narrator: "رواه البخاري" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 12, title: "أبواب الذكر",
+                sections: [
+                    {
+                        title: "ثواب الذكر وحلقه",
+                        hadiths: [
+                            { text: "يقول الله: أنا عند ظن عبدي بي وأنا معه إذا ذكرني، فإن ذكرني في نفسه ذكرته في نفسي...", narrator: "رواه البخاري ومسلم" },
+                            { text: "مثل الذي يذكر ربه والذي لا يذكر ربه مثل الحي والميت", narrator: "رواه البخاري" },
+                            { text: "إذا مررتم برياض الجنة فارتعوا (حلق الذكر)", narrator: "رواه الترمذي" }
+                        ]
+                    },
+                    {
+                        title: "ثواب التسبيح والتهليل",
+                        hadiths: [
+                            { text: "كلمتان خفيفتان على اللسان، ثقيلتان في الميزان، حبيبتان إلى الرحمن: سبحان الله وبحمده، سبحان الله العظيم", narrator: "رواه البخاري ومسلم" },
+                            { text: "قل: لا حول ولا قوة إلا بالله، فإنها كنز من كنوز الجنة", narrator: "رواه البخاري ومسلم" },
+                            { text: "أحب الكلام إلى الله أربع: سبحان الله والحمد لله ولا إله إلا الله والله أكبر", narrator: "رواه مسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الدعاء والاستغفار",
+                        hadiths: [
+                            { text: "يا ابن آدم إنك ما دعوتني ورجوتني غفرت لك على ما كان منك ولا أبالي", narrator: "رواه الترمذي" },
+                            { text: "دعوة المرء المسلم لأخيه بظهر الغيب مستجابة...", narrator: "رواه مسلم" },
+                            { text: "من صلى علي صلاة واحدة صلى الله عليه عشرا", narrator: "رواه مسلم" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 13, title: "أبواب البر والصلة",
+                sections: [
+                    {
+                        title: "ثواب الوالدين وصلة الرحم",
+                        hadiths: [
+                            { text: "الوالد أوسط أبواب الجنة", narrator: "رواه ابن ماجه والترمذي" },
+                            { text: "من سره أن يبسط له في رزقه وأن يُنسأ له في أثره فليصل رحمه", narrator: "رواه البخاري" },
+                            { text: "الرحم معلقة بالعرش تقول: من وصلني وصله الله، ومن قطعني قطعه الله", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الإحسان للأهل واليتامى والمساكين",
+                        hadiths: [
+                            { text: "أفضل دينار ينفقه الرجل: دينار ينفقه على عياله", narrator: "رواه مسلم" },
+                            { text: "من عال ابنتين أو ثلاثا حتى يُبن أو يموت عنهن كنت أنا وهو في الجنة كهاتين", narrator: "رواه مسلم" },
+                            { text: "أنا وكافل اليتيم في الجنة هكذا", narrator: "رواه البخاري" },
+                            { text: "الساعي على الأرملة والمسكين كالمجاهد في سبيل الله", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب قضاء الحوائج وزيارة المريض",
+                        hadiths: [
+                            { text: "من نفس عن مسلم كربة من كرب الدنيا نفس الله عنه كربة من كرب يوم القيامة...", narrator: "رواه مسلم" },
+                            { text: "إذا عاد الرجل أخاه أو زاره، قال الله تعالى: طبت وطاب ممشاك وتبوأت من الجنة منزلا", narrator: "رواه الترمذي" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 14, title: "أبواب الأدب والزهد",
+                sections: [
+                    {
+                        title: "ثواب حسن الخلق والحياء والصدق",
+                        hadiths: [
+                            { text: "إن من خياركم أحسنكم أخلاقا", narrator: "رواه البخاري ومسلم" },
+                            { text: "أنا زعيم ببيت في ربض الجنة لمن ترك المراء... وببيت في أعلى الجنة لمن حسن خلقه", narrator: "رواه أبو داود والترمذي" },
+                            { text: "الحياء من الإيمان، والإيمان في الجنة...", narrator: "رواه أحمد والترمذي" },
+                            { text: "إن الصدق يهدي إلى البر، وإن البر يهدي إلى الجنة", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب التواضع والحلم والرفق",
+                        hadiths: [
+                            { text: "ما نقصت صدقة من مال، وما زاد الله عبدا بعفو إلا عزا، وما تواضع أحد لله إلا رفعه الله", narrator: "رواه مسلم" },
+                            { text: "ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب", narrator: "رواه البخاري ومسلم" },
+                            { text: "إن الله رفيق يحب الرفق، ويعطي على الرفق ما لا يعطي على العنف", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب السلام والطلاقة والحب في الله",
+                        hadiths: [
+                            { text: "لا تدخلون الجنة حتى تؤمنوا، ولا تؤمنون حتى تحابوا... أفشوا السلام بينكم", narrator: "رواه مسلم" },
+                            { text: "تبسمك في وجه أخيك صدقة...", narrator: "رواه الترمذي" },
+                            { text: "إن الله تعالى يقول يوم القيامة: أين المتحابون بجلالي؟ اليوم أظلهم في ظلي يوم لا ظل إلا ظلي", narrator: "رواه مسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب الصبر على البلاء والمرض",
+                        hadiths: [
+                            { text: "عجبا لأمر المؤمن، إن أمره كله خير... إن أصابته سراء شكر فكان خيرا له، وإن أصابته ضراء صبر فكان خيرا له", narrator: "رواه مسلم" },
+                            { text: "ما من مسلم يصيبه أذى من مرض فما سواه إلا حط الله به سيئاته كما تحط الشجرة ورقها", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    },
+                    {
+                        title: "ثواب التوبة والزهد",
+                        hadiths: [
+                            { text: "قال الله عز وجل: أنا عند ظن عبدي بي، والله لله أفرح بتوبة عبده...", narrator: "رواه مسلم" },
+                            { text: "يدخل فقراء المسلمين الجنة قبل الأغنياء بنصف يوم وهو خمسمائة عام", narrator: "رواه ابن حبان والترمذي" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 15, title: "الجنة وخاتمة الثواب",
+                sections: [
+                    {
+                        title: "ثواب الإخلاص ونعيم الجنة",
+                        hadiths: [
+                            { text: "من يدخل الجنة ينعم ولا يبأس، لا تبلى ثيابه ولا يفنى شبابه، في الجنة ما لا عين رأت ولا أذن سمعت ولا خطر على قلب بشر", narrator: "رواه مسلم" },
+                            { text: "ليدخلن الجنة من أمتي سبعون ألفا أو سبعمائة ألف متماسكون آخذ بعضهم ببعض، وجوههم على صورة القمر ليلة البدر", narrator: "رواه البخاري ومسلم" },
+                            { text: "إن للمؤمن في الجنة لخيمة من لؤلؤة واحدة مجوفة طولها في السماء ستون ميلا...", narrator: "رواه البخاري ومسلم" },
+                            { text: "إذا دخل أهل الجنة الجنة، يقول الله عز وجل: هل تريدون شيئا أزيدكم؟... فيكشف الحجاب فما أعطوا شيئا أحب إليهم من النظر إلى ربهم", narrator: "رواه البخاري ومسلم" }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ===== حالة التطبيق =====
+        let currentChapterIndex = 0;
+        let currentSectionIndex = 0;
+        let isSearching = false;
+        let searchTimer = null;
+
+        // ===== مراجع عناصر DOM =====
+        const chaptersListEl = document.getElementById('chaptersList');
+        const sectionsContainerEl = document.getElementById('sectionsContainer');
+        const hadithsContainerEl = document.getElementById('hadithsContainer');
+        const searchResultsContainerEl = document.getElementById('searchResultsContainer');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const selectedChapterHeader = document.getElementById('selectedChapterHeader');
+        const selectedChapterTitleEl = document.getElementById('selectedChapterTitle');
+        const statsBarEl = document.getElementById('statsBar');
+        const backToTopBtn = document.getElementById('backToTop');
+        const toastEl = document.getElementById('toast');
+
+        // ===== أدوات النص العربي =====
+        // تطبيع النص: إزالة التشكيل وتوحيد الألف والياء والتاء المربوطة لبحث أكثر مرونة
+        function normalizeArabic(str) {
+            return (str || '')
+                .replace(/[\u064B-\u065F\u0670\u0640]/g, '') // التشكيل والتطويل
+                .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627') // الهمزات → ا
+                .replace(/\u0649/g, '\u064A') // ى → ي
+                .replace(/\u0629/g, '\u0647') // ة → ه
+                .replace(/[\u0624\u0626]/g, '\u0621') // ؤ ئ → ء
+                .toLowerCase();
+        }
+
+        // ===== الإحصاءات =====
+        function computeStats() {
+            let sections = 0, hadiths = 0;
+            database.forEach(ch => {
+                sections += ch.sections.length;
+                ch.sections.forEach(s => hadiths += s.hadiths.length);
+            });
+            return { chapters: database.length, sections, hadiths };
+        }
+
+        function renderStats() {
+            const s = computeStats();
+            const item = (num, label) => `
+                <div class="flex flex-col">
+                    <span class="text-2xl sm:text-3xl font-extrabold text-brand-700">${num}</span>
+                    <span class="text-xs sm:text-sm text-stone-500">${label}</span>
+                </div>`;
+            statsBarEl.innerHTML = item(s.chapters, 'باباً') +
+                `<span class="h-8 w-px bg-stone-200"></span>` + item(s.sections, 'قسماً') +
+                `<span class="h-8 w-px bg-stone-200"></span>` + item(s.hadiths, 'حديثاً');
+        }
+
+        // ===== التشغيل =====
+        function initApp() {
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+            loadDB();
+            renderStats();
+            renderChapters();
+            selectChapter(0);
+            setupAddModal();
+
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimer);
+                const val = e.target.value;
+                clearSearchBtn.classList.toggle('hidden', val.length === 0);
+                clearSearchBtn.classList.toggle('flex', val.length > 0);
+                searchTimer = setTimeout(() => handleSearch(val), 180);
+            });
+
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearSearchBtn.classList.add('hidden');
+                handleSearch('');
+                searchInput.focus();
+            });
+
+            // اختصار: الضغط على "/" يركّز على البحث
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement !== searchInput) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+
+            // زر العودة للأعلى
+            window.addEventListener('scroll', () => {
+                backToTopBtn.classList.toggle('hidden', window.scrollY < 400);
+                backToTopBtn.classList.toggle('flex', window.scrollY >= 400);
+            });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // أسهم تحريك شريط الأبواب
+            const chStart = document.getElementById('chScrollStart');
+            const chEnd = document.getElementById('chScrollEnd');
+            const scrollAmount = () => Math.max(160, chaptersListEl.clientWidth * 0.7);
+            if (chStart) chStart.addEventListener('click', () => chaptersListEl.scrollBy({ left: -scrollAmount(), behavior: 'smooth' }));
+            if (chEnd) chEnd.addEventListener('click', () => chaptersListEl.scrollBy({ left: scrollAmount(), behavior: 'smooth' }));
+
+            // إخفاء الأسهم عند عدم وجود فائض للتمرير
+            const updateArrows = () => {
+                const overflow = chaptersListEl.scrollWidth > chaptersListEl.clientWidth + 4;
+                [chStart, chEnd].forEach(b => { if (b) b.classList.toggle('hidden', !overflow); });
+            };
+            updateArrows();
+            window.addEventListener('resize', updateArrows);
+        }
+
+        // ===== توليد شريط الأبواب العلوي =====
+        function renderChapters() {
+            if (!chaptersListEl) return;
+            chaptersListEl.innerHTML = '';
+
+            database.forEach((chapter, index) => {
+                const isSelected = index === currentChapterIndex;
+                const shortTitle = chapter.title.replace(/أبواب\s*/g, '').trim();
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.setAttribute('aria-current', isSelected ? 'true' : 'false');
+                btn.title = chapter.title;
+                btn.onclick = () => {
+                    selectChapter(index);
+                    if (window.innerWidth < 1024) {
+                        selectedChapterHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                };
+
+                btn.className = `chapter-item group shrink-0 inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-bold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/30 ${isSelected ? 'bg-gradient-to-l from-brand-600 to-brand-800 text-paper border-brand-800 shadow-sm shadow-brand-900/20' : 'bg-paper-card text-brand-800 border-paper-deep hover:bg-brand-50 hover:border-gold-300'}`;
+
+                btn.innerHTML = `
+                    <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold shrink-0 transition-colors ${isSelected ? 'bg-gold-500 text-ink' : 'bg-brand-50 text-brand-700 group-hover:bg-brand-100'}">${chapter.id}</span>
+                    <span>${shortTitle}</span>
+                `;
+                chaptersListEl.appendChild(btn);
+
+                if (isSelected) {
+                    requestAnimationFrame(() => btn.scrollIntoView({ block: 'nearest', inline: 'center' }));
+                }
+            });
+        }
+
+        // ===== اختيار باب =====
+        function selectChapter(index) {
+            if (isSearching) {
+                searchInput.value = '';
+                clearSearchBtn.classList.add('hidden');
+                isSearching = false;
+                toggleSearchMode(false);
+            }
+            currentChapterIndex = index;
+            currentSectionIndex = 0;
+            renderChapters();
+            selectedChapterTitleEl.innerText = database[currentChapterIndex].title;
+            renderSections();
+            selectSection(0);
+        }
+
+        // ===== توليد الأقسام (Tabs) =====
+        function renderSections() {
+            sectionsContainerEl.innerHTML = '';
+            sectionsContainerEl.classList.remove('hidden');
+            const chapter = database[currentChapterIndex];
+
+            chapter.sections.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectSection(index);
+                const active = index === currentSectionIndex;
+                btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+                btn.className = `px-4 py-2 rounded-xl text-sm font-medium transition-colors border focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-100
+                    ${active ? 'bg-gold-500 text-white border-gold-500 shadow-sm' : 'bg-gold-50 text-gold-700 border-gold-100 hover:bg-gold-100 hover:border-gold-300'}`;
+                btn.innerText = section.title;
+                sectionsContainerEl.appendChild(btn);
+            });
+        }
+
+        // ===== اختيار قسم =====
+        function selectSection(index) {
+            currentSectionIndex = index;
+            renderSections();
+            hadithsContainerEl.innerHTML = '';
+            const chapter = database[currentChapterIndex];
+            const section = chapter.sections[currentSectionIndex];
+
+            const headerHtml = `
+                <div class="mb-6 flex items-center gap-3 animate-fadeUp">
+                    <div class="h-8 w-1.5 bg-gradient-to-b from-brand-400 to-brand-700 rounded-full"></div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-stone-800">${section.title}</h3>
+                    <span class="text-xs font-bold text-gold-700 bg-gold-100 px-2.5 py-0.5 rounded-full">${section.hadiths.length}</span>
+                </div>`;
+            hadithsContainerEl.insertAdjacentHTML('beforeend', headerHtml);
+
+            section.hadiths.forEach((hadith, i) => {
+                const card = createHadithCard(hadith);
+                card.style.animationDelay = `${Math.min(i * 60, 360)}ms`;
+                hadithsContainerEl.appendChild(card);
+            });
+        }
+
+        // ===== بطاقة الحديث =====
+        function createHadithCard(hadith) {
+            const isAyah = hadith.type === 'ayah';
+            const card = document.createElement('article');
+            card.className = `animate-fadeUp bg-paper-card p-6 md:p-8 rounded-2xl shadow-sm border transition-all relative overflow-hidden ${isAyah ? 'border-gold-100 hover:border-gold-300 border-r-4 border-r-gold-500' : 'border-paper-deep hover:border-gold-300'} hover:shadow-md`;
+
+            const sourceIcon = isAyah ? `
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>` : `
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`;
+
+            const sourceCls = isAyah ? 'text-gold-700 bg-gold-50 border-gold-100' : 'text-brand-700 bg-brand-50 border-brand-100';
+            const opener = isAyah ? '﴿' : '«';
+            const closer = isAyah ? '﴾' : '»';
+
+            card.innerHTML = `
+                <div class="relative z-10">
+                    <p class="hadith-naskh text-xl md:text-2xl ${isAyah ? 'text-gold-700' : 'text-stone-800'} mb-6">
+                        ${opener} ${highlightSearch(hadith.text)} ${closer}
+                    </p>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div class="flex items-center gap-2 font-medium text-sm w-fit px-3 py-1.5 rounded-lg border ${sourceCls}">
+                            ${sourceIcon}
+                            <span>${highlightSearch(hadith.narrator || (isAyah ? 'القرآن الكريم' : ''))}</span>
+                        </div>
+                        <button type="button" class="copy-btn inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-brand-700 transition-colors px-2 py-1 rounded-lg hover:bg-brand-50" aria-label="نسخ النص">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            نسخ
+                        </button>
+                    </div>
+                </div>`;
+
+            card.querySelector('.copy-btn').addEventListener('click', () => {
+                const fullText = `${hadith.text}\n(${hadith.narrator || ''})`;
+                navigator.clipboard?.writeText(fullText).then(() => showToast(isAyah ? 'تم نسخ الآية' : 'تم نسخ الحديث')).catch(() => {});
+            });
+
+            return card;
+        }
+
+        // ===== البحث =====
+        function handleSearch(rawQuery) {
+            const query = rawQuery.trim();
+            if (query.length < 2) {
+                if (isSearching) {
+                    isSearching = false;
+                    toggleSearchMode(false);
+                    selectChapter(currentChapterIndex);
+                }
+                return;
+            }
+
+            isSearching = true;
+            toggleSearchMode(true);
+            searchResultsContainerEl.innerHTML = '';
+            const nq = normalizeArabic(query);
+            let resultCount = 0;
+
+            const header = document.createElement('div');
+            header.className = 'mb-6 flex items-center gap-3 border-b border-stone-200 pb-4';
+            searchResultsContainerEl.appendChild(header);
+
+            database.forEach(chapter => {
+                chapter.sections.forEach(section => {
+                    section.hadiths.forEach(hadith => {
+                        const haystack = normalizeArabic(`${hadith.text} ${hadith.narrator} ${section.title} ${chapter.title}`);
+                        if (haystack.includes(nq)) {
+                            resultCount++;
+                            const resultCard = createHadithCard(hadith);
+                            const breadcrumb = document.createElement('div');
+                            breadcrumb.className = 'text-xs text-stone-500 mb-3 flex items-center gap-1 flex-wrap';
+                            breadcrumb.innerHTML = `
+                                <span class="font-medium">${chapter.title}</span>
+                                <svg class="w-3 h-3 text-stone-400 transform rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                <span>${highlightSearch(section.title)}</span>`;
+                            resultCard.querySelector('.relative.z-10').prepend(breadcrumb);
+                            searchResultsContainerEl.appendChild(resultCard);
+                        }
+                    });
+                });
+            });
+
+            header.innerHTML = `
+                <div class="h-8 w-1.5 bg-gradient-to-b from-brand-400 to-brand-700 rounded-full"></div>
+                <h3 class="text-xl font-bold text-stone-800">نتائج البحث</h3>
+                <span class="text-sm font-medium text-white bg-brand-600 px-2.5 py-0.5 rounded-full">${resultCount}</span>`;
+
+            if (resultCount === 0) {
+                searchResultsContainerEl.insertAdjacentHTML('beforeend', `
+                    <div class="text-center py-12 bg-paper-card rounded-2xl border border-paper-deep animate-pop">
+                        <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h4 class="text-lg font-medium text-stone-600">لم يتم العثور على نتائج مطابقة</h4>
+                        <p class="text-sm text-stone-400 mt-2">جرب البحث بكلمات مختلفة أو تأكد من الإملاء</p>
+                    </div>`);
+            }
+        }
+
+        // تمييز كلمة البحث (مع مراعاة التطبيع العربي)
+        function highlightSearch(text) {
+            if (!isSearching || !searchInput.value) return text;
+            const query = searchInput.value.trim();
+            if (query.length < 2) return text;
+            const nq = normalizeArabic(query);
+            const chars = [...text];
+            const normChars = chars.map(c => normalizeArabic(c));
+            let result = '', i = 0;
+            while (i < chars.length) {
+                // محاولة مطابقة بدءاً من الموضع i بعد التطبيع
+                let j = i, buf = '';
+                while (j < chars.length && buf.length < nq.length) {
+                    buf += normChars[j];
+                    j++;
+                }
+                if (buf === nq && nq.length > 0) {
+                    result += '<mark class="hl">' + chars.slice(i, j).join('') + '</mark>';
+                    i = j;
+                } else {
+                    result += escapeHtml(chars[i]);
+                    i++;
+                }
+            }
+            return result;
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // ===== تبديل وضع البحث =====
+        function toggleSearchMode(active) {
+            const els = [selectedChapterHeader, sectionsContainerEl, hadithsContainerEl];
+            els.forEach(el => el.classList.toggle('hidden', active));
+            searchResultsContainerEl.classList.toggle('hidden', !active);
+        }
+
+        // ===== إشعار النسخ =====
+        let toastTimer = null;
+        function showToast(msg) {
+            document.getElementById('toastMsg').textContent = msg;
+            toastEl.classList.remove('hidden');
+            toastEl.classList.add('flex');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toastEl.classList.add('hidden');
+                toastEl.classList.remove('flex');
+            }, 1800);
+        }
+
+        // ===== التخزين المحلي (يعمل على موقعك؛ ويتعطّل بهدوء داخل المعاينة) =====
+        const STORAGE_KEY = 'thawab_db_v1';
+
+        function loadDB() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length && parsed[0].sections) {
+                        database = parsed;
+                    }
+                }
+            } catch (e) { /* تُتجاهل: لا تخزين متاح */ }
+        }
+
+        function saveDB() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(database));
+            } catch (e) { /* تُتجاهل */ }
+        }
+
+        // ===== نافذة الإضافة =====
+        let addType = 'hadith';
+        const addModal = document.getElementById('addModal');
+        const addFieldsEl = document.getElementById('addFields');
+        const addTypesEl = document.getElementById('addTypes');
+
+        const TYPES = [
+            { key: 'chapter', label: 'باب' },
+            { key: 'section', label: 'قسم' },
+            { key: 'hadith',  label: 'حديث' },
+            { key: 'ayah',    label: 'آية' },
+        ];
+
+        function setupAddModal() {
+            // أزرار النوع
+            addTypesEl.innerHTML = '';
+            TYPES.forEach(t => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.dataset.type = t.key;
+                b.textContent = t.label;
+                b.className = 'add-type-btn px-2 py-2 rounded-xl text-sm font-bold border transition-colors';
+                b.onclick = () => { addType = t.key; paintTypes(); renderAddFields(); };
+                addTypesEl.appendChild(b);
+            });
+
+            document.getElementById('addBtn').addEventListener('click', openAddModal);
+            document.getElementById('addClose').addEventListener('click', closeAddModal);
+            document.getElementById('addCancel').addEventListener('click', closeAddModal);
+            document.getElementById('addOverlay').addEventListener('click', closeAddModal);
+            document.getElementById('addSave').addEventListener('click', saveAdd);
+            document.getElementById('exportBtn').addEventListener('click', exportDB);
+            document.getElementById('resetBtn').addEventListener('click', resetDB);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !addModal.classList.contains('hidden')) closeAddModal();
+            });
+        }
+
+        function paintTypes() {
+            [...addTypesEl.children].forEach(b => {
+                const active = b.dataset.type === addType;
+                b.className = `add-type-btn px-2 py-2 rounded-xl text-sm font-bold border transition-colors ${active ? 'bg-brand-700 text-white border-brand-700 shadow-sm' : 'bg-white text-stone-600 border-stone-200 hover:bg-brand-50'}`;
+            });
+        }
+
+        function openAddModal() {
+            addType = 'hadith';
+            paintTypes();
+            renderAddFields();
+            addModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAddModal() {
+            addModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function fieldBlock(label, inner) {
+            return `<label class="block">
+                <span class="block text-sm font-bold text-stone-700 mb-1.5">${label}</span>
+                ${inner}
+            </label>`;
+        }
+
+        const inputCls = 'focus-ring w-full px-3.5 py-2.5 border-2 border-stone-200 rounded-xl bg-white text-stone-800 transition-all';
+
+        function chapterOptionsHtml() {
+            return database.map((c, i) => `<option value="${i}">${c.id}. ${c.title}</option>`).join('');
+        }
+
+        function renderAddFields() {
+            const chOpts = chapterOptionsHtml();
+            if (addType === 'chapter') {
+                addFieldsEl.innerHTML =
+                    fieldBlock('اسم الباب', `<input id="inTitle" type="text" placeholder="مثال: أبواب الصبر" class="${inputCls}">`) +
+                    `<p class="text-xs text-stone-400">سيُضاف باب جديد، ثم يمكنك إضافة أقسامه وأحاديثه.</p>`;
+            } else if (addType === 'section') {
+                addFieldsEl.innerHTML =
+                    fieldBlock('الباب', `<select id="inChapter" class="${inputCls}">${chOpts}</select>`) +
+                    fieldBlock('اسم القسم', `<input id="inTitle" type="text" placeholder="مثال: ثواب الصبر على المرض" class="${inputCls}">`);
+            } else {
+                const isAyah = addType === 'ayah';
+                addFieldsEl.innerHTML =
+                    fieldBlock('الباب', `<select id="inChapter" class="${inputCls}">${chOpts}</select>`) +
+                    fieldBlock('القسم', `<select id="inSection" class="${inputCls}"></select>`) +
+                    fieldBlock(isAyah ? 'نص الآية' : 'نص الحديث', `<textarea id="inText" rows="4" placeholder="${isAyah ? 'اكتب نص الآية الكريمة...' : 'اكتب نص الحديث الشريف...'}" class="${inputCls} leading-relaxed resize-y"></textarea>`) +
+                    fieldBlock(isAyah ? 'المرجع (السورة ورقم الآية)' : 'الراوي / التخريج', `<input id="inRef" type="text" placeholder="${isAyah ? 'مثال: سورة البقرة: 261' : 'مثال: رواه البخاري ومسلم'}" class="${inputCls}">`);
+                refreshSectionOptions();
+                document.getElementById('inChapter').addEventListener('change', refreshSectionOptions);
+            }
+        }
+
+        function refreshSectionOptions() {
+            const chSel = document.getElementById('inChapter');
+            const secSel = document.getElementById('inSection');
+            if (!chSel || !secSel) return;
+            const ch = database[+chSel.value];
+            if (ch && ch.sections.length) {
+                secSel.innerHTML = ch.sections.map((s, i) => `<option value="${i}">${s.title}</option>`).join('');
+                secSel.disabled = false;
+            } else {
+                secSel.innerHTML = `<option value="-1">— لا توجد أقسام في هذا الباب، أضِف قسماً أولاً —</option>`;
+            }
+        }
+
+        function val(id) {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : '';
+        }
+        function flashInvalid(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('border-red-400');
+            el.focus();
+            setTimeout(() => el.classList.remove('border-red-400'), 1500);
+        }
+
+        function saveAdd() {
+            if (addType === 'chapter') {
+                const title = val('inTitle');
+                if (!title) return flashInvalid('inTitle');
+                const newId = database.reduce((m, c) => Math.max(m, c.id), 0) + 1;
+                database.push({ id: newId, title, sections: [] });
+                persistAndRefresh();
+                selectChapter(database.length - 1);
+                showToast('تمت إضافة الباب');
+            } else if (addType === 'section') {
+                const ci = +val('inChapter');
+                const title = val('inTitle');
+                if (!title) return flashInvalid('inTitle');
+                database[ci].sections.push({ title, hadiths: [] });
+                persistAndRefresh();
+                selectChapter(ci);
+                selectSection(database[ci].sections.length - 1);
+                showToast('تمت إضافة القسم');
+            } else {
+                const isAyah = addType === 'ayah';
+                const ci = +val('inChapter');
+                const si = +val('inSection');
+                const text = val('inText');
+                const ref = val('inRef');
+                if (si < 0) { showToast('أضِف قسماً لهذا الباب أولاً'); return; }
+                if (!text) return flashInvalid('inText');
+                const entry = { text, narrator: ref || (isAyah ? 'القرآن الكريم' : '') };
+                if (isAyah) entry.type = 'ayah';
+                database[ci].sections[si].hadiths.push(entry);
+                persistAndRefresh();
+                selectChapter(ci);
+                selectSection(si);
+                showToast(isAyah ? 'تمت إضافة الآية' : 'تمت إضافة الحديث');
+            }
+            closeAddModal();
+        }
+
+        function persistAndRefresh() {
+            saveDB();
+            renderStats();
+            renderChapters();
+        }
+
+        function exportDB() {
+            try {
+                const blob = new Blob([JSON.stringify(database, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'thawab-data.json';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                showToast('تم تصدير البيانات');
+            } catch (e) { showToast('تعذّر التصدير'); }
+        }
+
+        function resetDB() {
+            if (!confirm('استعادة البيانات الأصلية؟ سيُحذف كل ما أضفته في هذا المتصفح.')) return;
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            location.reload();
+        }
+
+        // تشغيل التطبيق
+        window.onload = initApp;
+    </script>
+</body>
+</html>
