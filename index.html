@@ -316,6 +316,31 @@
         window.logoutUser = () => {
             signOut(auth).then(() => { window.location.href = "login.html"; });
         };
+ <!-- Firebase Auth Guard (الحارس للصفحة الرئيسية) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // مفاتيح الربط الخاصة بمشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDF3GHcEs-By2HQBpF0905LLdV6lV2wzO4",
+            authDomain: "hejaili-ec4b9.firebaseapp.com",
+            projectId: "hejaili-ec4b9",
+            storageBucket: "hejaili-ec4b9.firebasestorage.app",
+            messagingSenderId: "656532128742",
+            appId: "1:656532128742:web:b6828996ab261bea6c8c27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // التحقق من الدخول (طرد الغرباء)
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // إذا لم يكن مسجلاً، اطرده لصفحة الدخول
+                window.location.href = "login.html";
+            }
+        });
     </script>
 </body>
 </html>
