@@ -84,7 +84,6 @@
             mix-blend-mode: multiply;
         }
 
-        /* ---- Map Tailwind neutral utilities onto theme variables ---- */
         .bg-white { background-color: var(--surface) !important; }
         .bg-slate-50 { background-color: var(--surface-alt) !important; }
         .bg-white\/90, .bg-white\/80 { background-color: var(--surface) !important; }
@@ -96,61 +95,47 @@
         .border-slate-200 { border-color: var(--border) !important; }
         .border-slate-100 { border-color: var(--border) !important; }
 
-        /* ---- Category panels: UNIFIED surface, colored borders + headings only ---- */
-        .bg-rose-50\/80,
-        .bg-amber-50\/80,
-        .bg-indigo-50\/80,
-        .bg-emerald-50\/80,
-        .bg-fuchsia-50\/80,
-        .bg-sky-50\/80,
-        .bg-purple-50\/80,
-        .bg-slate-50\/80,
-        .bg-orange-50\/80,
-        .bg-violet-50\/80,
-        .bg-teal-50\/80    { background-color: var(--surface) !important; }
-        .border-rose-100    { border-color: var(--bd-rose) !important; }
-        .border-amber-100   { border-color: var(--bd-amber) !important; }
-        .border-indigo-100  { border-color: var(--bd-indigo) !important; }
+        .bg-rose-50\/80, .bg-amber-50\/80, .bg-indigo-50\/80, .bg-emerald-50\/80,
+        .bg-fuchsia-50\/80, .bg-sky-50\/80, .bg-purple-50\/80, .bg-slate-50\/80,
+        .bg-orange-50\/80, .bg-violet-50\/80, .bg-teal-50\/80 { background-color: var(--surface) !important; }
+        
+        .border-rose-100 { border-color: var(--bd-rose) !important; }
+        .border-amber-100 { border-color: var(--bd-amber) !important; }
+        .border-indigo-100 { border-color: var(--bd-indigo) !important; }
         .border-emerald-100 { border-color: var(--bd-emerald) !important; }
         .border-fuchsia-100 { border-color: var(--bd-fuchsia) !important; }
-        .border-sky-100     { border-color: var(--bd-sky) !important; }
-        .border-purple-100  { border-color: var(--bd-purple) !important; }
-        .border-orange-100  { border-color: var(--bd-orange) !important; }
-        .border-violet-100  { border-color: var(--bd-violet) !important; }
-        .border-teal-100    { border-color: var(--bd-teal) !important; }
+        .border-sky-100 { border-color: var(--bd-sky) !important; }
+        .border-purple-100 { border-color: var(--bd-purple) !important; }
+        .border-orange-100 { border-color: var(--bd-orange) !important; }
+        .border-violet-100 { border-color: var(--bd-violet) !important; }
+        .border-teal-100 { border-color: var(--bd-teal) !important; }
 
-        /* Panel heading text — keep readable on dark panels */
-        .text-rose-900    { color: var(--tx-rose) !important; }
-        .text-amber-900   { color: var(--tx-amber) !important; }
-        .text-indigo-900  { color: var(--tx-indigo) !important; }
+        .text-rose-900 { color: var(--tx-rose) !important; }
+        .text-amber-900 { color: var(--tx-amber) !important; }
+        .text-indigo-900 { color: var(--tx-indigo) !important; }
         .text-emerald-900 { color: var(--tx-emerald) !important; }
         .text-fuchsia-900 { color: var(--tx-fuchsia) !important; }
-        .text-sky-900     { color: var(--tx-sky) !important; }
-        .text-purple-900  { color: var(--tx-purple) !important; }
-        .text-orange-900  { color: var(--tx-orange) !important; }
-        .text-violet-900  { color: var(--tx-violet) !important; }
-        .text-teal-900    { color: var(--tx-teal) !important; }
+        .text-sky-900 { color: var(--tx-sky) !important; }
+        .text-purple-900 { color: var(--tx-purple) !important; }
+        .text-orange-900 { color: var(--tx-orange) !important; }
+        .text-violet-900 { color: var(--tx-violet) !important; }
+        .text-teal-900 { color: var(--tx-teal) !important; }
 
-        /* Small info tiles (currency / embassy / youtube etc.) reuse pale tints too */
-        .bg-blue-50    { background-color: var(--panel-blue) !important; }
+        .bg-blue-50 { background-color: var(--panel-blue) !important; }
         .bg-emerald-50 { background-color: var(--panel-emerald) !important; }
-        .bg-indigo-50  { background-color: var(--panel-indigo) !important; }
-        .bg-amber-50   { background-color: var(--panel-amber) !important; }
-        .bg-rose-50    { background-color: var(--panel-rose) !important; }
-        .border-blue-100    { border-color: var(--bd-blue) !important; }
+        .bg-indigo-50 { background-color: var(--panel-indigo) !important; }
+        .bg-amber-50 { background-color: var(--panel-amber) !important; }
+        .bg-rose-50 { background-color: var(--panel-rose) !important; }
+        .border-blue-100 { border-color: var(--bd-blue) !important; }
         .border-emerald-100 { border-color: var(--bd-emerald) !important; }
 
-        /* Neutral chips, number badges & buttons */
         .bg-slate-100 { background-color: var(--surface-alt) !important; }
         .hover\:bg-slate-200:hover { background-color: var(--border) !important; }
         .text-slate-900 { color: var(--ink-strong) !important; }
-        /* Dark action buttons (Add Item / Save) keep contrast in both modes */
         .bg-slate-900 { background-color: var(--ink-strong) !important; }
         .bg-slate-900.text-white, .bg-slate-900 { color: var(--page-bg) !important; }
         .hover\:bg-slate-800:hover { background-color: var(--ink) !important; }
-        /* The big faded "#1" watermark numbers — keep them subtle, not invisible */
         .text-slate-900.opacity-5 { color: var(--ink) !important; }
-        /* Colored input text (currency/embassy fields) — readable on dark surface */
         .text-blue-800 { color: var(--tx-sky) !important; }
         .text-emerald-800 { color: var(--tx-emerald) !important; }
         .border-blue-200 { border-color: var(--bd-blue) !important; }
@@ -177,7 +162,6 @@
         .timeline-hide-scroll::-webkit-scrollbar { display: none; }
         .timeline-hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Visited country card — white bg, marked via border + toggle only */
         .visited-card {
             background-color: var(--surface) !important;
             border-color: var(--visited-bd) !important;
@@ -189,14 +173,13 @@
 
     <div id="dynamic-bg"></div>
 
-    <!-- Simplified Navbar (Breadcrumbs) -->
     <nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
             <div id="breadcrumb" class="text-sm font-semibold text-slate-600 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
                 <!-- Injected via JS -->
             </div>
             <div id="cloud-status" class="hidden text-[10px] font-bold text-emerald-600 flex items-center gap-1 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 whitespace-nowrap shadow-sm shrink-0">
-                <i class="fa-solid fa-cloud-arrow-up"></i> <span class="hidden sm:inline">Auto-Save On</span>
+                <i class="fa-solid fa-cloud-arrow-up"></i> <span class="hidden sm:inline">Namecheap Sync On</span>
             </div>
         </div>
     </nav>
@@ -317,22 +300,14 @@
         <span id="toast-message" class="text-sm font-medium">Action successful!</span>
     </div>
 
-    <!-- Firebase Logic & Application State -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <!-- Namecheap Cloud Sync & Application State -->
+    <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // --- Utility helpers (safe escaping + local persistence) ---
+        // --- Utility helpers (safe escaping) ---
         const LOCAL_KEY = 'travelArchive_v1';
-        // For visible text inserted via innerHTML
-        const escHtml = (s) => String(s ?? '')
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        // For values placed inside single-quoted JS string args within onclick="..."
-        const escAttr = (s) => String(s ?? '')
-            .replace(/\\/g, '\\\\').replace(/"/g, '&quot;').replace(/'/g, "\\'").replace(/[\r\n]/g, ' ');
+        const escHtml = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        const escAttr = (s) => String(s ?? '').replace(/\\/g, '\\\\').replace(/"/g, '&quot;').replace(/'/g, "\\'").replace(/[\r\n]/g, ' ');
 
         // Safe initializer for any city
         const initCityObj = (name) => ({
@@ -515,7 +490,6 @@
             }
         };
 
-        // Ensure consistency
         for (const cont in dbTemplate) {
             dbTemplate[cont].countries.forEach(c => {
                 if (!c.info) c.info = {};
@@ -536,193 +510,61 @@
         }
 
         let state = { view: 'continents', continent: null, country: null, city: null, tripId: null };
-        let tripsData = []; // Store Next Trip planner data
+        let tripsData = []; 
         
         const bgEl = document.getElementById('dynamic-bg');
         const contentEl = document.getElementById('app-content');
         const breadcrumbEl = document.getElementById('breadcrumb');
 
-        let dbFirestore = null;
-        let currentUserId = null;
-        let appId = 'default-app-id';
+        // --- Namecheap Sync Server Info ---
+        const API_URL = 'api.php';
+        const API_KEY = 'Hejaili_2026_Secure';
+        const MODULE_NAME = 'travel';
 
-        // Initialize Firebase
-        const setupFirebase = async () => {
+        const setupNamecheapSync = async () => {
+            document.getElementById('cloud-status').classList.remove('hidden');
+            document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span class="hidden sm:inline">Namecheap Sync On</span>';
+            
             try {
-                const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-                if (!firebaseConfigStr || firebaseConfigStr === '{}') return; 
-                
-                const app = initializeApp(JSON.parse(firebaseConfigStr));
-                const auth = getAuth(app);
-                dbFirestore = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+                const res = await fetch(`${API_URL}?key=${API_KEY}&module=${MODULE_NAME}`);
+                if(res.ok) {
+                    const data = await res.json();
+                    if(data && Object.keys(data).length > 0) {
+                        applySnapshot(data);
+                        if(state.view === 'cities') window.renderCities(state.continent, state.country, dbTemplate[state.continent].countries.find(c=>c.name===state.country).iso);
+                        else if(state.view === 'countries') window.renderCountries(state.continent);
+                        else if(state.view === 'continents') window.renderContinents();
+                        else if(state.view === 'trips') window.renderTrips();
+                        else if(state.view === 'tripDetails') window.renderTripPlanner(state.tripId);
+                        else if(state.view === 'details') window.renderCityDetails(state.continent, state.country, state.city);
+                    }
                 }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        currentUserId = user.uid;
-                        document.getElementById('cloud-status').classList.remove('hidden');
-                        loadCloudData();
-                    }
-                });
-            } catch (e) { console.warn("Cloud features disabled.", e); }
+            } catch(e) { console.warn("تعذر الاتصال بخادم Namecheap", e); }
         };
 
-        const loadCloudData = () => {
-            if (!currentUserId || !dbFirestore) return;
-            
-            // 1. Sync Cities Data
-            const citiesRef = collection(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_cities');
-            onSnapshot(citiesRef, (snapshot) => {
-                snapshot.forEach(doc => {
-                    const parts = doc.id.split('___');
-                    if(parts.length === 3) {
-                        const [continent, country, city] = parts;
-                        const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
-                        const cityData = cData?.cities.find(c => c.name === city);
-                        if (cityData) {
-                            const data = doc.data();
-                            cityData.hotels = data.hotels || [];
-                            cityData.restaurants = data.restaurants || [];
-                            cityData.transportation = data.transportation || [];
-                            cityData.activities = data.activities || [];
-                            cityData.shopping = data.shopping || [];
-                            cityData.notes = data.notes || [];
-                            cityData.airports = Array.isArray(data.airports) ? data.airports : [];
-                            cityData.weather = Array.isArray(data.weather) ? data.weather : [];
-                        }
-                    }
-                });
-                if(state.view === 'details') window.renderCityDetails(state.continent, state.country, state.city);
-            });
-
-            // 2. Sync Countries Data (Visited status, links, notes)
-            const countriesRef = collection(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_countries');
-            onSnapshot(countriesRef, (snapshot) => {
-                snapshot.forEach(doc => {
-                    const parts = doc.id.split('___');
-                    if(parts.length === 2) {
-                        const [continent, country] = parts;
-                        const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
-                        if (cData) {
-                            const data = doc.data();
-                            if (!cData.info) cData.info = {};
-                            if (data.currencyLink) cData.info.currencyLink = data.currencyLink;
-                            if (data.youtube) cData.info.youtube = data.youtube;
-                            if (data.telegram) cData.info.telegram = data.telegram;
-                            if (data.keep) cData.info.keep = data.keep;
-                            if (data.embassy) cData.info.embassy = data.embassy;
-                            cData.notes = data.notes || [];
-                            cData.visited = data.visited || false;
-                            
-                            // Safe merge custom added cities
-                            if (data.citiesList) {
-                                data.citiesList.forEach(cityName => {
-                                    let existing = cData.cities.find(c => c.name === cityName);
-                                    if (!existing) {
-                                        cData.cities.push({ ...initCityObj(cityName) });
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-                if(state.view === 'cities') {
-                    const isoCode = dbTemplate[state.continent].countries.find(c=>c.name===state.country).iso;
-                    window.renderCities(state.continent, state.country, isoCode);
-                } else if(state.view === 'countries') {
-                    window.renderCountries(state.continent);
-                }
-            });
-
-            // 3. Sync Trips Data
-            const tripsRef = collection(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_trips');
-            onSnapshot(tripsRef, (snapshot) => {
-                tripsData = [];
-                snapshot.forEach(doc => {
-                    tripsData.push({ id: doc.id, ...doc.data() });
-                });
-                tripsData.sort((a,b) => a.createdAt - b.createdAt);
-                
-                if(state.view === 'trips') window.renderTrips();
-                if(state.view === 'tripDetails') window.renderTripPlanner(state.tripId);
-            });
-        };
-
-        const syncToCloud = async (continent, country, city) => {
+        const syncToCloud = async () => {
             saveLocal();
-            if (!currentUserId || !dbFirestore) return;
-            const docId = `${continent}___${country}___${city}`;
-            const cityData = dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city);
-            
             try {
-                const docRef = doc(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_cities', docId);
-                await setDoc(docRef, {
-                    hotels: cityData.hotels || [],
-                    restaurants: cityData.restaurants || [],
-                    transportation: cityData.transportation || [],
-                    activities: cityData.activities || [],
-                    shopping: cityData.shopping || [],
-                    notes: cityData.notes || [],
-                    airports: cityData.airports || [],
-                    weather: cityData.weather || []
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: API_KEY, module: MODULE_NAME, data: buildSnapshot() })
                 });
-            } catch (e) { console.error("Error saving", e); }
+            } catch(e) { console.warn("فشل الحفظ في خادم Namecheap", e); }
         };
 
-        const syncCountryToCloud = async (continent, country) => {
-            saveLocal();
-            if (!currentUserId || !dbFirestore) return;
-            const docId = `${continent}___${country}`;
-            const countryData = dbTemplate[continent].countries.find(c => c.name === country);
-            
-            try {
-                const docRef = doc(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_countries', docId);
-                await setDoc(docRef, {
-                    visited: countryData.visited || false,
-                    currencyLink: countryData.info?.currencyLink || "",
-                    youtube: countryData.info?.youtube || "",
-                    telegram: countryData.info?.telegram || "",
-                    keep: countryData.info?.keep || "",
-                    embassy: countryData.info?.embassy || "",
-                    notes: countryData.notes || [],
-                    citiesList: countryData.cities.map(c => c.name) // Save custom added cities
-                });
-            } catch (e) { console.error("Error saving", e); }
-        };
-
+        const syncCountryToCloud = async () => { await syncToCloud(); };
         const syncTripToCloud = async (trip) => {
-            if (!currentUserId || !dbFirestore) {
-                const idx = tripsData.findIndex(t => t.id === trip.id);
-                if(idx > -1) tripsData[idx] = trip;
-                else tripsData.push(trip);
-                saveLocal();
-                return;
-            }
-            saveLocal();
-            try {
-                const docRef = doc(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_trips', trip.id);
-                await setDoc(docRef, trip);
-            } catch (e) { console.error("Error saving trip", e); }
+            const idx = tripsData.findIndex(t => t.id === trip.id);
+            if(idx > -1) tripsData[idx] = trip;
+            else tripsData.push(trip);
+            await syncToCloud();
         };
-
         const deleteTripFromCloud = async (tripId) => {
             tripsData = tripsData.filter(t => t.id !== tripId);
-            saveLocal();
-            if (!currentUserId || !dbFirestore) {
-                return;
-            }
-            try {
-                await deleteDoc(doc(dbFirestore, 'artifacts', appId, 'users', currentUserId, 'travel_trips', tripId));
-            } catch (e) { console.error("Error deleting trip", e); }
+            await syncToCloud();
         };
 
-        // --- Unified data appliers (used by cloud snapshots, local load & import) ---
         const applyCityData = (continent, country, city, data) => {
             const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
             const cityData = cData?.cities.find(c => c.name === city);
@@ -730,6 +572,7 @@
             ['hotels','restaurants','transportation','activities','shopping','notes','airports','weather']
                 .forEach(k => { cityData[k] = Array.isArray(data[k]) ? data[k] : []; });
         };
+        
         const applyCountryData = (continent, country, data) => {
             const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
             if (!cData) return;
@@ -745,7 +588,6 @@
             }
         };
 
-        // --- Local persistence (works fully offline / without Firebase) ---
         const buildSnapshot = () => {
             const cities = {}, countries = {};
             for (const cont in dbTemplate) {
@@ -772,15 +614,18 @@
             }
             return { cities, countries, trips: tripsData, savedAt: Date.now() };
         };
+        
         const saveLocal = () => {
-            try { localStorage.setItem(LOCAL_KEY, JSON.stringify(buildSnapshot())); } catch (e) { /* storage unavailable */ }
+            try { localStorage.setItem(LOCAL_KEY, JSON.stringify(buildSnapshot())); } catch (e) { }
         };
+        
         const applySnapshot = (parsed) => {
             if (!parsed) return;
             if (parsed.countries) for (const id in parsed.countries) { const p = id.split('___'); if (p.length === 2) applyCountryData(p[0], p[1], parsed.countries[id]); }
             if (parsed.cities) for (const id in parsed.cities) { const p = id.split('___'); if (p.length === 3) applyCityData(p[0], p[1], p[2], parsed.cities[id]); }
             if (Array.isArray(parsed.trips)) tripsData = parsed.trips;
         };
+        
         const loadLocal = () => {
             try {
                 const raw = localStorage.getItem(LOCAL_KEY);
@@ -790,7 +635,6 @@
             } catch (e) { return false; }
         };
 
-        // --- Backup export / import ---
         window.exportData = () => {
             saveLocal();
             const data = JSON.stringify(buildSnapshot(), null, 2);
@@ -803,14 +647,15 @@
             URL.revokeObjectURL(url);
             window.showToast('Backup downloaded', 'bg-emerald-600', 'fa-download');
         };
+        
         window.importData = (input) => {
             const file = input.files && input.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (ev) => {
+            reader.onload = async (ev) => {
                 try {
                     applySnapshot(JSON.parse(ev.target.result));
-                    saveLocal();
+                    await syncToCloud();
                     window.renderContinents();
                     window.showToast('Backup imported successfully!', 'bg-emerald-600', 'fa-circle-check');
                 } catch (e) {
@@ -826,7 +671,7 @@
             const countryData = dbTemplate[continent].countries.find(c => c.name === country);
             countryData.visited = !countryData.visited;
             if(state.view === 'countries') window.renderCountries(continent);
-            await syncCountryToCloud(continent, country);
+            await syncCountryToCloud();
         };
 
         window.updateCountryLink = async (continent, country, field, value, event) => {
@@ -839,7 +684,7 @@
                 aTag.target = value ? "_blank" : "_self";
             }
             window.showToast("Saved!", "bg-emerald-600", "fa-check");
-            await syncCountryToCloud(continent, country);
+            await syncCountryToCloud();
         };
 
         window.setBackground = (isoCode) => {
@@ -852,7 +697,6 @@
             }
         };
 
-        // Shared List Formatter (Numbers instead of Checkmarks)
         window.formatList = (items, category, textColorClass, iconColorClass, continent, country, city) => {
             if (!items || items.length === 0) return `<p class="text-sm opacity-50 italic text-slate-500">No data listed yet.</p>`;
             
@@ -898,16 +742,11 @@
             }).join('') + `</ul>`;
         };
 
-        // ------------------------------------------------------------------
-        // VIEWS
-        // ------------------------------------------------------------------
-
         window.renderContinents = () => {
             state = { view: 'continents', continent: null, country: null, city: null, tripId: null };
             window.setBackground(null);
             window.updateBreadcrumb();
 
-            // Global stats
             let totalCountries = 0, totalVisited = 0;
             for (const k in dbTemplate) {
                 totalCountries += dbTemplate[k].countries.length;
@@ -952,7 +791,6 @@
                 `;
             }
             
-            // Next Trip Card
             html += `
                     <div onclick="renderTrips()" class="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 flex flex-col items-center justify-center cursor-pointer card-hover shadow-sm group">
                         <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 transition-colors duration-300 text-emerald-600 bg-white border border-emerald-100 shadow-sm">
@@ -961,14 +799,10 @@
                         <h2 class="text-2xl font-bold text-emerald-900 mb-2 text-center">Next Trip</h2>
                         <span class="text-sm font-medium text-emerald-600">Planner & Timeline</span>
                     </div>
-            `;
-            
-            html += `</div>`;
+            </div>`;
             contentEl.innerHTML = html;
         };
 
-        // --- NEXT TRIP VIEWS ---
-        
         window.renderTrips = () => {
             state.view = 'trips';
             window.setBackground(null);
@@ -1048,12 +882,10 @@
 
             if(!activeDestId && trip.destinations.length > 0) activeDestId = trip.destinations[0].id;
 
-            // Compute Budget Total
             let totalCost = 0;
             const b = trip.budget || { intlFlights: '', domFlights: '', hotels: '', activities: '', restaurants: '', shopping: '' };
             totalCost = Object.values(b).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
 
-            // Generate cascading dropdowns
             let countryOptions = `<option value="">-- Select Country --</option>`;
             for(const cont in dbTemplate) {
                 const group = `<optgroup label="${cont}">`;
@@ -1081,7 +913,6 @@
                     </div>
                 </div>
 
-                <!-- Budget Planner Section -->
                 <div class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200 p-6 shadow-sm mb-6 fade-in">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-wallet text-emerald-500"></i> Budget Planner (SAR)</h3>
@@ -1115,7 +946,6 @@
                     </div>
                 </div>
 
-                <!-- Timeline Gantt Section -->
                 <div class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200 p-6 shadow-sm mb-6 fade-in">
                     <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fa-solid fa-timeline text-emerald-500"></i> Days Timeline</h3>
                     <p class="text-xs text-slate-400 mb-4">1. Select a destination card below. 2. Click on the dates to assign them.</p>
@@ -1123,7 +953,6 @@
                     <div class="flex overflow-x-auto gap-2 pb-4 timeline-hide-scroll snap-x">
             `;
 
-            // Setup Calendar logic
             let startDateObj = new Date();
             if(trip.startDate) {
                 const [y, m, d] = trip.startDate.split('-');
@@ -1165,7 +994,6 @@
                     </div>
                 </div>
                 
-                <!-- Destinations List -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 fade-in">
             `;
 
@@ -1193,10 +1021,7 @@
             }
 
             html += `</div>`;
-
-            // Packing checklist
             html += window.renderPackingSection(trip.id);
-
             contentEl.innerHTML = html;
         };
 
@@ -1234,10 +1059,6 @@
             return colors[Math.floor(Math.random() * colors.length)];
         };
 
-        // ------------------------------------------------------------------
-        // PACKING CHECKLIST
-        // ------------------------------------------------------------------
-        // Structure: trip.packing = { suitcase: { Clothes:[{name,checked}], ... }, backpack:[...], documents:[...] }
         const PACKING_GROUPS = {
             suitcase: {
                 label: 'Suitcase', icon: 'fa-suitcase-rolling', color: '#c2823a',
@@ -1260,7 +1081,6 @@
             documents: ['Passport', 'Visa', 'Flight tickets', 'Hotel reservations', 'Travel insurance', 'ID card', 'Driver license'].map(n => ({ name: n, checked: false }))
         });
 
-        // Ensure a trip has a valid packing object (migrates older trips)
         const ensurePacking = (trip) => {
             if (!trip.packing) trip.packing = defaultPacking();
             if (!trip.packing.suitcase) trip.packing.suitcase = defaultPacking().suitcase;
@@ -1270,7 +1090,6 @@
             return trip.packing;
         };
 
-        // Count checked / total across the whole list
         const packingStats = (trip) => {
             const p = ensurePacking(trip);
             let total = 0, done = 0;
@@ -1280,7 +1099,6 @@
             return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
         };
 
-        // Render one list of items (with checkboxes, add & delete)
         const renderPackingItems = (tripId, path, items, accent) => {
             let html = `<ul class="space-y-1.5 mb-2">`;
             if (!items.length) {
@@ -1320,7 +1138,6 @@
                         </div>
                     </div>
 
-                    <!-- Suitcase -->
                     <div class="mb-6">
                         <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100">
                             <i class="fa-solid ${sc.icon} text-lg" style="color:${sc.color}"></i>
@@ -1339,7 +1156,6 @@
                         </div>
                     </div>
 
-                    <!-- Backpack + Documents -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100">
@@ -1361,7 +1177,6 @@
             return html;
         };
 
-        // Resolve a "path" string to the array it points at
         const resolvePackArray = (trip, path) => {
             const p = ensurePacking(trip);
             if (path.startsWith('suitcase.')) return p.suitcase[path.split('.')[1]];
@@ -1437,7 +1252,7 @@
             if(!trip) return;
             if(!trip.budget) trip.budget = {};
             trip.budget[field] = value;
-            window.renderTripPlanner(tripId); // Refresh to update total calculation
+            window.renderTripPlanner(tripId);
             await syncTripToCloud(trip);
         };
 
@@ -1494,8 +1309,6 @@
             await syncTripToCloud(trip);
         };
 
-        // --- MAIN VIEWS ---
-
         window.renderCountries = (continentName) => {
             state.view = 'countries';
             state.continent = continentName;
@@ -1505,7 +1318,6 @@
             window.updateBreadcrumb();
 
             const countries = dbTemplate[continentName].countries.sort((a, b) => a.name.localeCompare(b.name));
-            
             const visitedCount = countries.filter(c => c.visited).length;
             const pct = countries.length ? Math.round((visitedCount / countries.length) * 100) : 0;
 
@@ -1541,7 +1353,6 @@
                 html += `
                     <div class="country-card relative rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer card-hover shadow-sm border group ${isVisited ? 'visited-card' : 'bg-white border-slate-200'}" data-search="${cnH.toLowerCase()}">
                         
-                        <!-- Visited Toggle Button -->
                         <button onclick="toggleCountryVisited('${continentName}', '${cn}', event)" class="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-all z-10 shadow-sm ${isVisited ? 'bg-emerald-600 text-white scale-110' : 'bg-slate-100 text-slate-300 hover:bg-emerald-100 hover:text-emerald-500'}" title="${isVisited ? 'Visited ✓' : 'Mark as visited'}">
                             <i class="fa-solid fa-check text-[10px]"></i>
                         </button>
@@ -1604,7 +1415,6 @@
                     </h2>
                 </div>
 
-                <!-- Country Information Box -->
                 <div class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 shadow-sm mb-6 fade-in">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <a href="https://ar.wikipedia.org/wiki/${encodeURIComponent(countryName)}" target="_blank" class="bg-slate-50 hover:bg-slate-100 p-4 rounded-2xl border border-slate-100 shadow-inner transition-colors group text-center flex flex-col items-center justify-center gap-2">
@@ -1654,13 +1464,12 @@
                     </div>
                 </div>
 
-                <!-- Country Additional Notes -->
                 <div class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 shadow-sm mb-10 fade-in">
                     <div class="flex items-center justify-between mb-5">
                         <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-blue-500"></i> Additional Notes</h3>
                         <button onclick="openAddModal('${continentName}', '${escAttr(countryName)}', null, 'notes')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg transition font-bold"><i class="fa-solid fa-plus mr-1"></i> Add Note</button>
                     </div>
-                    ${formatList(countryData.notes, "notes", "text-slate-700", "text-blue-500", continentName, countryName, null)}
+                    ${window.formatList(countryData.notes, "notes", "text-slate-700", "text-blue-500", continentName, countryName, null)}
                 </div>
             `;
 
@@ -1733,7 +1542,6 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
                     
-                    <!-- City Info / Wikipedia -->
                     <div class="bg-teal-50/80 backdrop-blur-sm border border-teal-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-teal-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-circle-info text-teal-600"></i> City Info</h3>
                         <a href="${wikiLink}" target="_blank" class="w-full h-[calc(100%-44px)] min-h-[120px] bg-slate-50 hover:bg-slate-100 p-6 rounded-2xl border border-slate-100 shadow-inner transition-colors group text-center flex flex-col items-center justify-center gap-3">
@@ -1742,55 +1550,47 @@
                         </a>
                     </div>
 
-                    <!-- Airports List -->
                     <div class="bg-purple-50/80 backdrop-blur-sm border border-purple-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-purple-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-plane-departure text-purple-500"></i> Airports</h3>
-                        ${formatList(cityData.airports, "airports", "text-purple-900", "text-purple-600", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.airports, "airports", "text-purple-900", "text-purple-600", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Weather List -->
                     <div class="bg-sky-50/80 backdrop-blur-sm border border-sky-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-sky-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-cloud-sun text-sky-500"></i> Weather</h3>
-                        ${formatList(cityData.weather, "weather", "text-sky-900", "text-sky-600", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.weather, "weather", "text-sky-900", "text-sky-600", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Hotels -->
                     <div class="bg-orange-50/80 backdrop-blur-sm border border-orange-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-orange-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-bed text-orange-500"></i> Hotels</h3>
-                        ${formatList(cityData.hotels, "hotels", "text-orange-900", "text-orange-500", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.hotels, "hotels", "text-orange-900", "text-orange-500", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Restaurants -->
                     <div class="bg-amber-50/80 backdrop-blur-sm border border-amber-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-utensils text-amber-500"></i> Restaurants</h3>
-                        ${formatList(cityData.restaurants, "restaurants", "text-amber-900", "text-amber-500", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.restaurants, "restaurants", "text-amber-900", "text-amber-500", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Transportation -->
                     <div class="bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-train text-indigo-500"></i> Transportation</h3>
-                        ${formatList(cityData.transportation, "transportation", "text-indigo-900", "text-indigo-500", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.transportation, "transportation", "text-indigo-900", "text-indigo-500", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Activities -->
                     <div class="bg-emerald-50/80 backdrop-blur-sm border border-emerald-100 rounded-3xl p-6 shadow-sm">
                         <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-ticket text-emerald-500"></i> Activities</h3>
-                        ${formatList(cityData.activities, "activities", "text-emerald-900", "text-emerald-500", continentName, countryName, cityName)}
+                        ${window.formatList(cityData.activities, "activities", "text-emerald-900", "text-emerald-500", continentName, countryName, cityName)}
                     </div>
 
-                    <!-- Shopping -->
                     <div class="bg-violet-50/80 backdrop-blur-sm border border-violet-100 rounded-3xl p-6 shadow-sm lg:col-span-2">
                         <h3 class="text-lg font-bold text-violet-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-bag-shopping text-violet-500"></i> Shopping</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                            ${formatList(cityData.shopping, "shopping", "text-violet-900", "text-violet-500", continentName, countryName, cityName)}
+                            ${window.formatList(cityData.shopping, "shopping", "text-violet-900", "text-violet-500", continentName, countryName, cityName)}
                         </div>
                     </div>
 
-                    <!-- Additional Notes -->
                     <div class="bg-teal-50/80 backdrop-blur-sm border border-teal-100 rounded-3xl p-6 shadow-sm lg:col-span-3">
                         <h3 class="text-lg font-bold text-teal-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-pen-to-square text-teal-600"></i> Additional Notes</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
-                            ${formatList(cityData.notes, "notes", "text-teal-900", "text-teal-600", continentName, countryName, cityName)}
+                            ${window.formatList(cityData.notes, "notes", "text-teal-900", "text-teal-600", continentName, countryName, cityName)}
                         </div>
                     </div>
 
@@ -1800,10 +1600,7 @@
         };
 
         window.updateBreadcrumb = () => {
-            // 1. رابط للعودة إلى الصفحة الرئيسية للمستودع (index.html)
             let html = `<a href="index.html" class="hover:text-emerald-600 transition font-bold" title="العودة للمستودع الرئيسي"><i class="fa-solid fa-house mr-1"></i> Home</a>`;
-            
-            // 2. فاصل ثم رابط لصفحة القارات داخل قسم السفر
             html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <button onclick="renderContinents()" class="hover:text-slate-900 transition font-medium">Travel Archive</button>`;
             
             if (state.view === 'trips' || state.view === 'tripDetails') {
@@ -1828,7 +1625,6 @@
             breadcrumbEl.innerHTML = html;
         };
 
-        // --- MODAL & DELETE LOGIC ---
         let currentEditContext = null;
         let deleteContext = null;
         let cityAddContext = null;
@@ -1839,7 +1635,6 @@
             const catSelect = document.getElementById('new-item-category');
 
             if (!city) {
-                // Country view note
                 catContainer.classList.add('hidden');
                 document.getElementById('modal-category-title').textContent = "Note";
             } else {
@@ -1861,7 +1656,6 @@
             currentEditContext = { continent, country, city, category, index, isEdit: true };
             const catContainer = document.getElementById('category-container');
 
-            // Locate the item
             let arr;
             if (city) {
                 const cityData = dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city);
@@ -1873,7 +1667,6 @@
             if (typeof item === 'string') item = { name: item };
             if (!item) return;
 
-            // Category is locked during edit to keep the item in place
             catContainer.classList.add('hidden');
             document.getElementById('modal-action-title').textContent = 'Edit';
             document.getElementById('modal-category-title').textContent = city ? 'Item' : 'Note';
@@ -1918,7 +1711,7 @@
             closeAddCityModal();
             window.renderCities(continent, country, countryData.iso);
             window.showToast("City added successfully!", "bg-emerald-600", "fa-circle-check");
-            await syncCountryToCloud(continent, country);
+            await syncCountryToCloud();
         };
 
         window.saveNewItem = async () => {
@@ -1934,7 +1727,6 @@
             if (link) newItem.link = link;
             if (notes) newItem.notes = notes;
 
-            // --- EDIT MODE: update item in place ---
             if (isEdit) {
                 const category = currentEditContext.category;
                 const index = currentEditContext.index;
@@ -1949,16 +1741,15 @@
                 if (city) {
                     window.renderCityDetails(continent, country, city);
                     window.showToast("Item updated!", "bg-blue-600", "fa-pen");
-                    await syncToCloud(continent, country, city);
+                    await syncToCloud();
                 } else {
                     window.renderCities(continent, country, dbTemplate[continent].countries.find(c => c.name === country).iso);
                     window.showToast("Note updated!", "bg-blue-600", "fa-pen");
-                    await syncCountryToCloud(continent, country);
+                    await syncCountryToCloud();
                 }
                 return;
             }
 
-            // --- ADD MODE ---
             let category = !city ? 'notes' : document.getElementById('new-item-category').value;
 
             if (city) {
@@ -1971,7 +1762,7 @@
                 closeAddModal();
                 window.renderCityDetails(continent, country, city);
                 window.showToast("Added successfully!", "bg-emerald-600", "fa-circle-check");
-                await syncToCloud(continent, country, city);
+                await syncToCloud();
             } else {
                 const countryData = dbTemplate[continent].countries.find(c => c.name === country);
                 if (!countryData.notes) countryData.notes = [];
@@ -1981,7 +1772,7 @@
                 closeAddModal();
                 window.renderCities(continent, country, countryData.iso);
                 window.showToast("Note added successfully!", "bg-emerald-600", "fa-circle-check");
-                await syncCountryToCloud(continent, country);
+                await syncCountryToCloud();
             }
         };
 
@@ -2013,7 +1804,7 @@
                 closeConfirmModal();
                 window.renderCities(continent, country, countryData.iso);
                 window.showToast("City deleted", "bg-rose-600", "fa-trash-can");
-                await syncCountryToCloud(continent, country);
+                await syncCountryToCloud();
                 return;
             }
 
@@ -2026,7 +1817,7 @@
                 closeConfirmModal();
                 window.renderCityDetails(continent, country, city);
                 window.showToast("Item deleted", "bg-rose-600", "fa-trash-can");
-                await syncToCloud(continent, country, city);
+                await syncToCloud();
             } else {
                 const countryData = dbTemplate[continent].countries.find(c => c.name === country);
                 countryData[category].splice(index, 1);
@@ -2034,7 +1825,7 @@
                 closeConfirmModal();
                 window.renderCities(continent, country, countryData.iso);
                 window.showToast("Note deleted", "bg-rose-600", "fa-trash-can");
-                await syncCountryToCloud(continent, country);
+                await syncCountryToCloud();
             }
         };
 
@@ -2054,7 +1845,6 @@
             setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
         };
 
-        // --- Keyboard shortcuts: Esc closes modals, Enter submits ---
         document.addEventListener('keydown', (e) => {
             const open = (id) => !document.getElementById(id).classList.contains('hidden');
             if (e.key === 'Escape') {
@@ -2067,10 +1857,10 @@
             }
         });
 
-        window.onload = () => {
+        window.onload = async () => {
             loadLocal();
             window.renderContinents();
-            setupFirebase();
+            await setupNamecheapSync();
         };
 
     </script>
