@@ -294,4 +294,779 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const LOCAL_KEY = 'travelArchive_v1';
+        const escHtml = (s) => String(s ?? '').replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
+        const escAttr = (s) => String(s ?? '').replace(/\\/g, '\\\\').replace(/"/g, '"').replace(/'/g, "\\'").replace(/[\r\n]/g, ' ');
+
+        const initCityObj = (name) => ({
+            name: name,
+            info: { visa: "N/A", currency: "N/A", currencyCode: "USD", airport: "N/A", airportCode: "N/A", flights: "N/A", bestTime: "N/A" },
+            hotels: [], restaurants: [], transportation: [], activities: [], shopping: [], notes: [], airports: [], weather: []
+        });
+
+        // The Master Database (150 Countries with Capitals)
+        const dbTemplate = {
+            "Asia & Oceania": {
+                icon: "fa-earth-asia", color: "text-amber-500 bg-amber-50 border-amber-100",
+                countries: [
+                    { name: "Vietnam", iso: "vn", cities: [ { ...initCityObj("Hanoi") } ] },
+                    { name: "Thailand", iso: "th", cities: [ { ...initCityObj("Bangkok") } ] },
+                    { name: "Philippines", iso: "ph", cities: [ { ...initCityObj("Manila") } ] },
+                    { name: "Malaysia", iso: "my", cities: [ { ...initCityObj("Kuala Lumpur") } ] },
+                    { name: "Indonesia", iso: "id", cities: [ { ...initCityObj("Jakarta") } ] },
+                    { name: "Laos", iso: "la", cities: [ { ...initCityObj("Vientiane") } ] },
+                    { name: "Cambodia", iso: "kh", cities: [ { ...initCityObj("Phnom Penh") } ] },
+                    { name: "Brunei", iso: "bn", cities: [ { ...initCityObj("Bandar Seri Begawan") } ] },
+                    { name: "Singapore", iso: "sg", cities: [ { ...initCityObj("Singapore") } ] },
+                    { name: "South Korea", iso: "kr", cities: [ { ...initCityObj("Seoul") } ] },
+                    { name: "Japan", iso: "jp", cities: [ { ...initCityObj("Tokyo") }, { ...initCityObj("Osaka") }, { ...initCityObj("Kyoto") } ] },
+                    { name: "China", iso: "cn", cities: [ { ...initCityObj("Beijing") }, { ...initCityObj("Shanghai") } ] },
+                    { name: "Hong Kong", iso: "hk", cities: [ { ...initCityObj("Hong Kong") } ] },
+                    { name: "Macau", iso: "mo", cities: [ { ...initCityObj("Macau") } ] },
+                    { name: "Nepal", iso: "np", cities: [ { ...initCityObj("Kathmandu") } ] },
+                    { name: "Bhutan", iso: "bt", cities: [ { ...initCityObj("Thimphu") } ] },
+                    { name: "Maldives", iso: "mv", cities: [ { ...initCityObj("Malé") } ] },
+                    { name: "Sri Lanka", iso: "lk", cities: [ { ...initCityObj("Colombo") } ] },
+                    { name: "India", iso: "in", cities: [ { ...initCityObj("New Delhi") }, { ...initCityObj("Mumbai") } ] },
+                    { name: "Australia", iso: "au", cities: [ { ...initCityObj("Canberra") }, { ...initCityObj("Sydney") } ] },
+                    { name: "New Zealand", iso: "nz", cities: [ { ...initCityObj("Wellington") } ] },
+                    { name: "Fiji", iso: "fj", cities: [ { ...initCityObj("Suva") } ] },
+                    { name: "Tajikistan", iso: "tj", cities: [ { ...initCityObj("Dushanbe") } ] },
+                    { name: "Kazakhstan", iso: "kz", cities: [ { ...initCityObj("Astana") } ] },
+                    { name: "Uzbekistan", iso: "uz", cities: [ { ...initCityObj("Tashkent") } ] },
+                    { name: "Kyrgyzstan", iso: "kg", cities: [ { ...initCityObj("Bishkek") } ] },
+                    { name: "Azerbaijan", iso: "az", cities: [ { ...initCityObj("Baku") } ] },
+                    { name: "Georgia", iso: "ge", cities: [ { ...initCityObj("Tbilisi") } ] },
+                    { name: "Armenia", iso: "am", cities: [ { ...initCityObj("Yerevan") } ] },
+                    { name: "Kuwait", iso: "kw", cities: [ { ...initCityObj("Kuwait City") } ] },
+                    { name: "Oman", iso: "om", cities: [ { ...initCityObj("Muscat") } ] },
+                    { name: "Bahrain", iso: "bh", cities: [ { ...initCityObj("Manama") } ] },
+                    { name: "Qatar", iso: "qa", cities: [ { ...initCityObj("Doha") } ] },
+                    { name: "United Arab Emirates", iso: "ae", cities: [ { ...initCityObj("Abu Dhabi") }, { ...initCityObj("Dubai") } ] },
+                    { name: "Saudi Arabia", iso: "sa", cities: [ { ...initCityObj("Riyadh") }, { ...initCityObj("Jeddah") } ] },
+                    { name: "Jordan", iso: "jo", cities: [ { ...initCityObj("Amman") } ] },
+                    { name: "Lebanon", iso: "lb", cities: [ { ...initCityObj("Beirut") } ] },
+                    { name: "Syria", iso: "sy", cities: [ { ...initCityObj("Damascus") } ] },
+                    { name: "Turkey", iso: "tr", cities: [ { ...initCityObj("Ankara") }, { ...initCityObj("Istanbul") } ] },
+                    { name: "Iraq", iso: "iq", cities: [ { ...initCityObj("Baghdad") } ] },
+                    { name: "Iran", iso: "ir", cities: [ { ...initCityObj("Tehran") } ] },
+                    { name: "Yemen", iso: "ye", cities: [ { ...initCityObj("Sana'a") } ] }
+                ]
+            },
+            "Europe": {
+                icon: "fa-earth-europe", color: "text-blue-500 bg-blue-50 border-blue-100",
+                countries: [
+                    { name: "Spain", iso: "es", cities: [ { ...initCityObj("Madrid") }, { ...initCityObj("Barcelona") } ] },
+                    { name: "United Kingdom", iso: "gb", cities: [ { ...initCityObj("London") } ] },
+                    { name: "Ireland", iso: "ie", cities: [ { ...initCityObj("Dublin") } ] },
+                    { name: "France", iso: "fr", cities: [ { ...initCityObj("Paris") } ] },
+                    { name: "Germany", iso: "de", cities: [ { ...initCityObj("Berlin") }, { ...initCityObj("Munich") } ] },
+                    { name: "Italy", iso: "it", cities: [ { ...initCityObj("Rome") }, { ...initCityObj("Milan") } ] },
+                    { name: "Greece", iso: "gr", cities: [ { ...initCityObj("Athens") } ] },
+                    { name: "Netherlands", iso: "nl", cities: [ { ...initCityObj("Amsterdam") } ] },
+                    { name: "Belgium", iso: "be", cities: [ { ...initCityObj("Brussels") } ] },
+                    { name: "Denmark", iso: "dk", cities: [ { ...initCityObj("Copenhagen") } ] },
+                    { name: "Norway", iso: "no", cities: [ { ...initCityObj("Oslo") } ] },
+                    { name: "Finland", iso: "fi", cities: [ { ...initCityObj("Helsinki") } ] },
+                    { name: "Sweden", iso: "se", cities: [ { ...initCityObj("Stockholm") } ] },
+                    { name: "Portugal", iso: "pt", cities: [ { ...initCityObj("Lisbon") } ] },
+                    { name: "Austria", iso: "at", cities: [ { ...initCityObj("Vienna") } ] },
+                    { name: "Slovakia", iso: "sk", cities: [ { ...initCityObj("Bratislava") } ] },
+                    { name: "Slovenia", iso: "si", cities: [ { ...initCityObj("Ljubljana") } ] },
+                    { name: "Czech Republic", iso: "cz", cities: [ { ...initCityObj("Prague") } ] },
+                    { name: "Hungary", iso: "hu", cities: [ { ...initCityObj("Budapest") } ] },
+                    { name: "Serbia", iso: "rs", cities: [ { ...initCityObj("Belgrade") } ] },
+                    { name: "Croatia", iso: "hr", cities: [ { ...initCityObj("Zagreb") } ] },
+                    { name: "Albania", iso: "al", cities: [ { ...initCityObj("Tirana") } ] },
+                    { name: "Bosnia", iso: "ba", cities: [ { ...initCityObj("Sarajevo") } ] },
+                    { name: "Bulgaria", iso: "bg", cities: [ { ...initCityObj("Sofia") } ] },
+                    { name: "North Macedonia", iso: "mk", cities: [ { ...initCityObj("Skopje") } ] },
+                    { name: "Poland", iso: "pl", cities: [ { ...initCityObj("Warsaw") } ] },
+                    { name: "Moldova", iso: "md", cities: [ { ...initCityObj("Chișinău") } ] },
+                    { name: "Luxembourg", iso: "lu", cities: [ { ...initCityObj("Luxembourg City") } ] },
+                    { name: "Lithuania", iso: "lt", cities: [ { ...initCityObj("Vilnius") } ] },
+                    { name: "Liechtenstein", iso: "li", cities: [ { ...initCityObj("Vaduz") } ] },
+                    { name: "Latvia", iso: "lv", cities: [ { ...initCityObj("Riga") } ] },
+                    { name: "Iceland", iso: "is", cities: [ { ...initCityObj("Reykjavik") } ] },
+                    { name: "Montenegro", iso: "me", cities: [ { ...initCityObj("Podgorica") } ] },
+                    { name: "Malta", iso: "mt", cities: [ { ...initCityObj("Valletta") } ] },
+                    { name: "Andorra", iso: "ad", cities: [ { ...initCityObj("Andorra la Vella") } ] },
+                    { name: "Belarus", iso: "by", cities: [ { ...initCityObj("Minsk") } ] },
+                    { name: "Russia", iso: "ru", cities: [ { ...initCityObj("Moscow") } ] },
+                    { name: "Romania", iso: "ro", cities: [ { ...initCityObj("Bucharest") } ] },
+                    { name: "Estonia", iso: "ee", cities: [ { ...initCityObj("Tallinn") } ] },
+                    { name: "Cyprus", iso: "cy", cities: [ { ...initCityObj("Nicosia") } ] },
+                    { name: "Switzerland", iso: "ch", cities: [ { ...initCityObj("Bern") }, { ...initCityObj("Geneva") } ] }
+                ]
+            },
+            "Africa": {
+                icon: "fa-earth-africa", color: "text-emerald-500 bg-emerald-50 border-emerald-100",
+                countries: [
+                    { name: "Egypt", iso: "eg", cities: [ { ...initCityObj("Cairo") } ] },
+                    { name: "Tunisia", iso: "tn", cities: [ { ...initCityObj("Tunis") } ] },
+                    { name: "Algeria", iso: "dz", cities: [ { ...initCityObj("Algiers") } ] },
+                    { name: "Morocco", iso: "ma", cities: [ { ...initCityObj("Rabat") }, { ...initCityObj("Casablanca") } ] },
+                    { name: "Mauritania", iso: "mr", cities: [ { ...initCityObj("Nouakchott") } ] },
+                    { name: "Senegal", iso: "sn", cities: [ { ...initCityObj("Dakar") } ] },
+                    { name: "Rwanda", iso: "rw", cities: [ { ...initCityObj("Kigali") } ] },
+                    { name: "Kenya", iso: "ke", cities: [ { ...initCityObj("Nairobi") } ] },
+                    { name: "Tanzania", iso: "tz", cities: [ { ...initCityObj("Dodoma") } ] },
+                    { name: "Ethiopia", iso: "et", cities: [ { ...initCityObj("Addis Ababa") } ] },
+                    { name: "South Africa", iso: "za", cities: [ { ...initCityObj("Pretoria") }, { ...initCityObj("Cape Town") } ] },
+                    { name: "Uganda", iso: "ug", cities: [ { ...initCityObj("Kampala") } ] },
+                    { name: "Comoros", iso: "km", cities: [ { ...initCityObj("Moroni") } ] },
+                    { name: "Seychelles", iso: "sc", cities: [ { ...initCityObj("Victoria") } ] },
+                    { name: "Zimbabwe", iso: "zw", cities: [ { ...initCityObj("Harare") } ] },
+                    { name: "Zambia", iso: "zm", cities: [ { ...initCityObj("Lusaka") } ] },
+                    { name: "Namibia", iso: "na", cities: [ { ...initCityObj("Windhoek") } ] },
+                    { name: "Botswana", iso: "bw", cities: [ { ...initCityObj("Gaborone") } ] },
+                    { name: "Mozambique", iso: "mz", cities: [ { ...initCityObj("Maputo") } ] },
+                    { name: "Madagascar", iso: "mg", cities: [ { ...initCityObj("Antananarivo") } ] },
+                    { name: "Ghana", iso: "gh", cities: [ { ...initCityObj("Accra") } ] },
+                    { name: "Burkina Faso", iso: "bf", cities: [ { ...initCityObj("Ouagadougou") } ] },
+                    { name: "Cote d'Ivoire", iso: "ci", cities: [ { ...initCityObj("Yamoussoukro") } ] },
+                    { name: "Cameroon", iso: "cm", cities: [ { ...initCityObj("Yaoundé") } ] },
+                    { name: "Nigeria", iso: "ng", cities: [ { ...initCityObj("Abuja") } ] },
+                    { name: "Niger", iso: "ne", cities: [ { ...initCityObj("Niamey") } ] },
+                    { name: "Angola", iso: "ao", cities: [ { ...initCityObj("Luanda") } ] },
+                    { name: "Benin", iso: "bj", cities: [ { ...initCityObj("Porto-Novo") } ] },
+                    { name: "Guinea", iso: "gn", cities: [ { ...initCityObj("Conakry") } ] },
+                    { name: "Guinea-Bissau", iso: "gw", cities: [ { ...initCityObj("Bissau") } ] },
+                    { name: "Mauritius", iso: "mu", cities: [ { ...initCityObj("Port Louis") } ] },
+                    { name: "Djibouti", iso: "dj", cities: [ { ...initCityObj("Djibouti City") } ] },
+                    { name: "Central Africa", iso: "cf", cities: [ { ...initCityObj("Bangui") } ] },
+                    { name: "Gabon", iso: "ga", cities: [ { ...initCityObj("Libreville") } ] },
+                    { name: "Chad", iso: "td", cities: [ { ...initCityObj("N'Djamena") } ] },
+                    { name: "The Gambia", iso: "gm", cities: [ { ...initCityObj("Banjul") } ] },
+                    { name: "Sierra Leone", iso: "sl", cities: [ { ...initCityObj("Freetown") } ] },
+                    { name: "Congo", iso: "cg", cities: [ { ...initCityObj("Brazzaville") } ] }
+                ]
+            },
+            "Americas": {
+                icon: "fa-earth-americas", color: "text-rose-500 bg-rose-50 border-rose-100",
+                countries: [
+                    { name: "Canada", iso: "ca", cities: [ { ...initCityObj("Ottawa") }, { ...initCityObj("Toronto") } ] },
+                    { name: "Mexico", iso: "mx", cities: [ { ...initCityObj("Mexico City") } ] },
+                    { name: "United States", iso: "us", cities: [ { ...initCityObj("Washington D.C.") }, { ...initCityObj("New York") } ] },
+                    { name: "Brazil", iso: "br", cities: [ { ...initCityObj("Brasília") }, { ...initCityObj("Rio de Janeiro") } ] },
+                    { name: "Argentina", iso: "ar", cities: [ { ...initCityObj("Buenos Aires") } ] },
+                    { name: "Cuba", iso: "cu", cities: [ { ...initCityObj("Havana") } ] },
+                    { name: "Jamaica", iso: "jm", cities: [ { ...initCityObj("Kingston") } ] },
+                    { name: "Haiti", iso: "ht", cities: [ { ...initCityObj("Port-au-Prince") } ] },
+                    { name: "The Bahamas", iso: "bs", cities: [ { ...initCityObj("Nassau") } ] },
+                    { name: "Costa Rica", iso: "cr", cities: [ { ...initCityObj("San José") } ] },
+                    { name: "Guatemala", iso: "gt", cities: [ { ...initCityObj("Guatemala City") } ] },
+                    { name: "Nicaragua", iso: "ni", cities: [ { ...initCityObj("Managua") } ] },
+                    { name: "Honduras", iso: "hn", cities: [ { ...initCityObj("Tegucigalpa") } ] },
+                    { name: "El Salvador", iso: "sv", cities: [ { ...initCityObj("San Salvador") } ] },
+                    { name: "Peru", iso: "pe", cities: [ { ...initCityObj("Lima") } ] },
+                    { name: "Chile", iso: "cl", cities: [ { ...initCityObj("Santiago") } ] },
+                    { name: "Colombia", iso: "co", cities: [ { ...initCityObj("Bogotá") } ] },
+                    { name: "Ecuador", iso: "ec", cities: [ { ...initCityObj("Quito") } ] },
+                    { name: "Bolivia", iso: "bo", cities: [ { ...initCityObj("Sucre") } ] },
+                    { name: "Venezuela", iso: "ve", cities: [ { ...initCityObj("Caracas") } ] },
+                    { name: "Uruguay", iso: "uy", cities: [ { ...initCityObj("Montevideo") } ] },
+                    { name: "Paraguay", iso: "py", cities: [ { ...initCityObj("Asunción") } ] },
+                    { name: "Suriname", iso: "sr", cities: [ { ...initCityObj("Paramaribo") } ] },
+                    { name: "Dominican Republic", iso: "do", cities: [ { ...initCityObj("Santo Domingo") } ] },
+                    { name: "Barbados", iso: "bb", cities: [ { ...initCityObj("Bridgetown") } ] },
+                    { name: "Belize", iso: "bz", cities: [ { ...initCityObj("Belmopan") } ] },
+                    { name: "Aruba", iso: "aw", cities: [ { ...initCityObj("Oranjestad") } ] },
+                    { name: "Panama", iso: "pa", cities: [ { ...initCityObj("Panama City") } ] },
+                    { name: "Guyana", iso: "gy", cities: [ { ...initCityObj("Georgetown") } ] }
+                ]
+            }
+        };
+
+        for (const cont in dbTemplate) {
+            dbTemplate[cont].countries.forEach(c => {
+                if (!c.info) c.info = {};
+                if (c.visited === undefined) c.visited = false;
+                if (!c.notes) c.notes = [];
+                c.cities.forEach(city => {
+                    if (!city.info) city.info = { visa: "N/A", currency: "N/A", currencyCode: "USD", airport: "N/A", airportCode: "N/A", flights: "N/A", bestTime: "N/A" };
+                    if (!city.hotels) city.hotels = [];
+                    if (!city.restaurants) city.restaurants = [];
+                    if (!city.transportation) city.transportation = [];
+                    if (!city.activities) city.activities = [];
+                    if (!city.shopping) city.shopping = [];
+                    if (!city.notes) city.notes = [];
+                    if (!city.airports) city.airports = [];
+                    if (!city.weather) city.weather = [];
+                });
+            });
+        }
+
+        let state = { view: 'continents', continent: null, country: null, city: null, tripId: null };
+        let tripsData = []; 
+        let dbFirestore = null;
+        let currentUserId = null;
+
+        const bgEl = document.getElementById('dynamic-bg');
+        const contentEl = document.getElementById('app-content');
+        const breadcrumbEl = document.getElementById('breadcrumb');
+
+        // === مفاتيح Firebase الخاصة بك ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyDF3GHcEs-By2HQBpF0905LLdV6lV2wzO4",
+            authDomain: "hejaili-ec4b9.firebaseapp.com",
+            projectId: "hejaili-ec4b9",
+            storageBucket: "hejaili-ec4b9.firebasestorage.app",
+            messagingSenderId: "656532128742",
+            appId: "1:656532128742:web:b6828996ab261bea6c8c27"
+        };
+
+        const setupFirebase = () => {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            dbFirestore = getFirestore(app);
+
+            // جدار الحماية (Auth Guard)
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    document.getElementById('cloud-status').classList.remove('hidden');
+                    document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span class="hidden sm:inline">Firebase Sync On</span>';
+                    loadCloudData();
+                } else {
+                    // طرد أي شخص غير مسجل دخول
+                    window.location.href = "login.html";
+                }
+            });
+        };
+
+        window.logoutUser = () => {
+            const auth = getAuth();
+            signOut(auth).then(() => { window.location.href = "login.html"; });
+        };
+
+        const loadCloudData = () => {
+            if (!currentUserId || !dbFirestore) return;
+            
+            const docRef = doc(dbFirestore, 'family_data', 'travel');
+            onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    applySnapshot(snapshot.data());
+                    if(state.view === 'cities') window.renderCities(state.continent, state.country, dbTemplate[state.continent].countries.find(c=>c.name===state.country).iso);
+                    else if(state.view === 'countries') window.renderCountries(state.continent);
+                    else if(state.view === 'continents') window.renderContinents();
+                    else if(state.view === 'trips') window.renderTrips();
+                    else if(state.view === 'tripDetails') window.renderTripPlanner(state.tripId);
+                    else if(state.view === 'details') window.renderCityDetails(state.continent, state.country, state.city);
+                }
+            });
+        };
+
+        const syncToCloud = async () => {
+            saveLocal();
+            if (!currentUserId || !dbFirestore) return;
+            try {
+                await setDoc(doc(dbFirestore, 'family_data', 'travel'), buildSnapshot());
+            } catch (e) { console.error("Error saving", e); }
+        };
+
+        const syncCountryToCloud = async () => { await syncToCloud(); };
+        const syncTripToCloud = async (trip) => {
+            const idx = tripsData.findIndex(t => t.id === trip.id);
+            if(idx > -1) tripsData[idx] = trip;
+            else tripsData.push(trip);
+            await syncToCloud();
+        };
+        const deleteTripFromCloud = async (tripId) => {
+            tripsData = tripsData.filter(t => t.id !== tripId);
+            await syncToCloud();
+        };
+
+        const applyCityData = (continent, country, city, data) => {
+            const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
+            const cityData = cData?.cities.find(c => c.name === city);
+            if (!cityData) return;
+            ['hotels','restaurants','transportation','activities','shopping','notes','airports','weather']
+                .forEach(k => { cityData[k] = Array.isArray(data[k]) ? data[k] : []; });
+        };
+        const applyCountryData = (continent, country, data) => {
+            const cData = dbTemplate[continent]?.countries.find(c => c.name === country);
+            if (!cData) return;
+            if (!cData.info) cData.info = {};
+            ['currencyLink','youtube','telegram','keep','embassy']
+                .forEach(f => { if (data[f] !== undefined) cData.info[f] = data[f]; });
+            cData.notes = Array.isArray(data.notes) ? data.notes : [];
+            cData.visited = !!data.visited;
+            if (Array.isArray(data.citiesList)) {
+                data.citiesList.forEach(cityName => {
+                    if (!cData.cities.find(c => c.name === cityName)) cData.cities.push({ ...initCityObj(cityName) });
+                });
+            }
+        };
+
+        const buildSnapshot = () => {
+            const cities = {}, countries = {};
+            for (const cont in dbTemplate) {
+                dbTemplate[cont].countries.forEach(co => {
+                    countries[`${cont}___${co.name}`] = {
+                        visited: co.visited || false,
+                        currencyLink: co.info?.currencyLink || '',
+                        youtube: co.info?.youtube || '',
+                        telegram: co.info?.telegram || '',
+                        keep: co.info?.keep || '',
+                        embassy: co.info?.embassy || '',
+                        notes: co.notes || [],
+                        citiesList: co.cities.map(c => c.name)
+                    };
+                    co.cities.forEach(ci => {
+                        const id = `${cont}___${co.name}___${ci.name}`;
+                        cities[id] = {
+                            hotels: ci.hotels||[], restaurants: ci.restaurants||[], transportation: ci.transportation||[],
+                            activities: ci.activities||[], shopping: ci.shopping||[], notes: ci.notes||[],
+                            airports: ci.airports||[], weather: ci.weather||[]
+                        };
+                    });
+                });
+            }
+            return { cities, countries, trips: tripsData, savedAt: Date.now() };
+        };
+        
+        const saveLocal = () => {
+            try { localStorage.setItem(LOCAL_KEY, JSON.stringify(buildSnapshot())); } catch (e) { }
+        };
+        
+        const applySnapshot = (parsed) => {
+            if (!parsed) return;
+            if (parsed.countries) for (const id in parsed.countries) { const p = id.split('___'); if (p.length === 2) applyCountryData(p[0], p[1], parsed.countries[id]); }
+            if (parsed.cities) for (const id in parsed.cities) { const p = id.split('___'); if (p.length === 3) applyCityData(p[0], p[1], p[2], parsed.cities[id]); }
+            if (Array.isArray(parsed.trips)) tripsData = parsed.trips;
+        };
+        
+        const loadLocal = () => {
+            try {
+                const raw = localStorage.getItem(LOCAL_KEY);
+                if (!raw) return false;
+                applySnapshot(JSON.parse(raw));
+                return true;
+            } catch (e) { return false; }
+        };
+
+        window.exportData = () => {
+            saveLocal();
+            const data = JSON.stringify(buildSnapshot(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `travel-archive-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            window.showToast('Backup downloaded', 'bg-emerald-600', 'fa-download');
+        };
+        
+        window.importData = async (input) => {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                try {
+                    applySnapshot(JSON.parse(ev.target.result));
+                    await syncToCloud();
+                    window.renderContinents();
+                    window.showToast('Backup imported successfully!', 'bg-emerald-600', 'fa-circle-check');
+                } catch (e) {
+                    window.showToast('Invalid backup file', 'bg-rose-500', 'fa-triangle-exclamation');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        };
+
+        window.toggleCountryVisited = async (continent, country, event) => {
+            event.stopPropagation();
+            const countryData = dbTemplate[continent].countries.find(c => c.name === country);
+            countryData.visited = !countryData.visited;
+            if(state.view === 'countries') window.renderCountries(continent);
+            await syncCountryToCloud();
+        };
+
+        window.updateCountryLink = async (continent, country, field, value, event) => {
+            const countryData = dbTemplate[continent].countries.find(c => c.name === country);
+            if(!countryData.info) countryData.info = {};
+            countryData.info[field] = value;
+            if(event) {
+                const aTag = event.target.nextElementSibling;
+                aTag.href = value || '#';
+                aTag.target = value ? "_blank" : "_self";
+            }
+            window.showToast("Saved!", "bg-emerald-600", "fa-check");
+            await syncCountryToCloud();
+        };
+
+        window.setBackground = (isoCode) => {
+            if (!isoCode) {
+                bgEl.style.backgroundImage = "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000')";
+                bgEl.style.opacity = "0.08";
+            } else {
+                bgEl.style.backgroundImage = `url('https://flagcdn.com/w1920/${isoCode}.png')`;
+                bgEl.style.opacity = "0.05";
+            }
+        };
+
+        window.formatList = (items, category, textColorClass, iconColorClass, continent, country, city) => {
+            if (!items || items.length === 0) return `<p class="text-sm opacity-50 italic text-slate-500">No data listed yet.</p>`;
+            return `<ul class="space-y-4">` + items.map((item, index) => {
+                let itemName = item; let itemLink = ''; let itemNotes = '';
+                if (typeof item === 'object' && item !== null) { itemName = item.name; itemLink = item.link || ''; itemNotes = item.notes || ''; }
+                let nameHtml = `<span class="font-semibold">${escHtml(itemName)}</span>`;
+                if (itemLink) nameHtml = `<a href="${escHtml(itemLink)}" target="_blank" rel="noopener" class="font-bold hover:underline flex items-center gap-1.5 transition-all group-hover:text-slate-900">${escHtml(itemName)} <i class="fa-solid fa-map-location-dot text-[11px] opacity-60 group-hover:opacity-100"></i></a>`;
+                let notesHtml = '';
+                if (itemNotes) notesHtml = `<p class="text-xs mt-1.5 opacity-80 leading-snug flex items-start gap-1"><i class="fa-solid fa-pen-clip text-[10px] mt-0.5 opacity-50"></i> ${escHtml(itemNotes)}</p>`;
+                const cityArg = city ? `'${escAttr(city)}'` : `null`;
+                const co = escAttr(continent), ct = escAttr(country);
+                return `
+                <li class="flex items-start justify-between gap-3 group bg-white/50 p-3 rounded-xl border border-transparent hover:border-slate-200 hover:shadow-sm transition hover:bg-white">
+                    <div class="flex items-start gap-3 w-full">
+                        <div class="w-5 h-5 shrink-0 rounded-full flex items-center justify-center text-[10px] font-bold bg-slate-100 border border-slate-200 ${iconColorClass}">${index + 1}</div>
+                        <div class="${textColorClass} w-full mt-0.5"><div class="text-sm">${nameHtml}</div>${notesHtml}</div>
+                    </div>
+                    <div class="flex items-center opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all shrink-0">
+                        <button onclick="openEditModal('${co}', '${ct}', ${cityArg}, '${category}', ${index})" class="text-slate-400 hover:text-blue-500 px-1.5" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="promptDelete('${co}', '${ct}', ${cityArg}, '${category}', ${index})" class="text-slate-400 hover:text-rose-500 px-1.5" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </li>`;
+            }).join('') + `</ul>`;
+        };
+
+        window.renderContinents = () => {
+            state = { view: 'continents', continent: null, country: null, city: null, tripId: null };
+            window.setBackground(null);
+            window.updateBreadcrumb();
+            let totalCountries = 0, totalVisited = 0;
+            for (const k in dbTemplate) { totalCountries += dbTemplate[k].countries.length; totalVisited += dbTemplate[k].countries.filter(c => c.visited).length; }
+            const visitedPct = totalCountries ? Math.round((totalVisited / totalCountries) * 100) : 0;
+            let html = `
+                <div class="text-center mb-8 fade-in">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4 tracking-tight">Select Continent</h1>
+                    <p class="text-slate-500 max-w-2xl mx-auto text-lg font-light">Explore the comprehensive archive of ${totalCountries} countries.</p>
+                </div>
+                <div class="max-w-3xl mx-auto mb-10 fade-in">
+                    <div class="bg-white/90 backdrop-blur-md border border-slate-200 rounded-3xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-passport text-emerald-500"></i> Travel Progress</h3>
+                            <span class="text-sm font-black text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-lg">${totalVisited} / ${totalCountries} visited · ${visitedPct}%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden mb-5">
+                            <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-700" style="width:${visitedPct}%"></div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <button onclick="exportData()" class="text-xs font-bold bg-slate-900 text-white px-4 py-2 rounded-xl hover:bg-slate-800 transition flex items-center gap-2"><i class="fa-solid fa-download"></i> Export Backup</button>
+                            <button onclick="document.getElementById('import-file').click()" class="text-xs font-bold bg-slate-100 text-slate-600 px-4 py-2 rounded-xl hover:bg-slate-200 transition flex items-center gap-2"><i class="fa-solid fa-upload"></i> Import Backup</button>
+                            <button onclick="logoutUser()" class="text-xs font-bold bg-rose-50 text-rose-600 px-4 py-2 rounded-xl hover:bg-rose-100 transition flex items-center gap-2 ml-auto"><i class="fa-solid fa-arrow-right-from-bracket"></i> تسجيل خروج</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 fade-in">
+            `;
+            for (const [name, data] of Object.entries(dbTemplate)) {
+                html += `
+                    <div onclick="renderCountries('${name}')" class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col items-center justify-center cursor-pointer card-hover shadow-sm group">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 transition-colors duration-300 ${data.color}"><i class="fa-solid ${data.icon}"></i></div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2 text-center">${name}</h2>
+                        <span class="text-sm font-medium text-slate-500">${data.countries.length} Countries</span>
+                    </div>
+                `;
+            }
+            html += `
+                    <div onclick="renderTrips()" class="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 flex flex-col items-center justify-center cursor-pointer card-hover shadow-sm group">
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 transition-colors duration-300 text-emerald-600 bg-white border border-emerald-100 shadow-sm"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h2 class="text-2xl font-bold text-emerald-900 mb-2 text-center">Next Trip</h2>
+                        <span class="text-sm font-medium text-emerald-600">Planner & Timeline</span>
+                    </div>
+            </div>`;
+            contentEl.innerHTML = html;
+        };
+
+        window.renderTrips = () => {
+            state.view = 'trips'; window.setBackground(null); window.updateBreadcrumb();
+            let html = `
+                <div class="mb-10 fade-in relative text-center">
+                    <h2 class="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">Next Trip Planner</h2>
+                    <p class="text-slate-500 font-medium">Manage budgets and timeline your upcoming adventures.</p>
+                    <button onclick="openAddTripModal()" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl shadow-md transition-all inline-flex items-center gap-2 font-bold text-sm"><i class="fa-solid fa-plus"></i> Create New Trip</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+            `;
+            if(tripsData.length === 0) {
+                html += `
+                    <div class="col-span-3 bg-white/80 backdrop-blur-md rounded-3xl border border-slate-200 p-12 text-center shadow-sm max-w-2xl mx-auto w-full">
+                        <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-300 text-3xl border border-emerald-100"><i class="fa-solid fa-calendar-plus"></i></div>
+                        <h3 class="text-2xl font-bold text-slate-700 mb-2">No Trips Planned</h3>
+                    </div>`;
+            } else {
+                tripsData.forEach((trip, idx) => {
+                    let totalCost = trip.budget ? Object.values(trip.budget).reduce((sum, val) => sum + (parseFloat(val) || 0), 0) : 0;
+                    html += `
+                        <div onclick="renderTripPlanner('${trip.id}')" class="bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer card-hover shadow-sm group relative">
+                            <div class="absolute -right-4 -top-4 text-8xl opacity-5 text-slate-900 font-bold italic pointer-events-none">#${idx+1}</div>
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl border border-emerald-100"><i class="fa-solid fa-plane"></i></div>
+                                <div><h3 class="text-xl font-bold text-slate-800 truncate">${escHtml(trip.name)}</h3><p class="text-xs font-bold text-slate-400">Starts: ${trip.startDate || 'N/A'} • ${trip.totalDays} Days</p></div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <div class="flex flex-wrap gap-1">${trip.destinations.slice(0,2).map(d => `<span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">${escHtml(d.city)}</span>`).join('')}</div>
+                                <div class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 shadow-inner shrink-0"><i class="fa-solid fa-wallet mr-1"></i> ${totalCost} SAR</div>
+                            </div>
+                            <button onclick="promptDeleteTrip('${trip.id}', event)" class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>`;
+                });
+            }
+            html += `</div>`; contentEl.innerHTML = html;
+        };
+
+        let activeDestId = null;
+        window.renderTripPlanner = (tripId) => {
+            state.view = 'tripDetails'; state.tripId = tripId; window.updateBreadcrumb();
+            const trip = tripsData.find(t => t.id === tripId); if(!trip) return renderTrips();
+            if(!activeDestId && trip.destinations.length > 0) activeDestId = trip.destinations[0].id;
+            let totalCost = Object.values(trip.budget || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
+            let countryOptions = `<option value="">-- Select Country --</option>`;
+            for(const cont in dbTemplate) {
+                countryOptions += `<optgroup label="${cont}">` + dbTemplate[cont].countries.map(c => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join('') + `</optgroup>`;
+            }
+            const b = trip.budget || {};
+
+            let html = `
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 fade-in">
+                    <div><h2 class="text-4xl font-extrabold text-slate-800 tracking-tight">${escHtml(trip.name)}</h2></div>
+                    <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
+                        <select id="trip-country-select" onchange="updateTripCitySelect()" class="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-sm font-medium w-full sm:w-40">${countryOptions}</select>
+                        <select id="trip-city-select" class="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-sm font-medium w-full sm:w-40" disabled><option value="">-- City --</option></select>
+                        <button onclick="addDestToTrip('${trip.id}')" class="bg-slate-900 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-sm">Add</button>
+                    </div>
+                </div>
+                <div class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200 p-6 shadow-sm mb-6 fade-in">
+                    <div class="flex items-center justify-between mb-4"><h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-wallet text-emerald-500"></i> Budget Planner (SAR)</h3><div class="text-lg font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-1.5 rounded-xl shadow-inner">Total Est: <span class="font-black">${totalCost}</span></div></div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        ${['intlFlights','domFlights','hotels','activities','restaurants','shopping'].map(f => `<div><label class="block text-[10px] font-bold text-slate-400 mb-1 capitalize">${f}</label><input type="number" value="${b[f]||''}" onchange="updateTripBudget('${trip.id}', '${f}', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-slate-700 outline-none"></div>`).join('')}
+                    </div>
+                </div>
+                <div class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200 p-6 shadow-sm mb-6 fade-in">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fa-solid fa-timeline text-emerald-500"></i> Days Timeline</h3>
+                    <div class="flex overflow-x-auto gap-2 pb-4 timeline-hide-scroll snap-x">
+            `;
+            let startDateObj = new Date(); if(trip.startDate) { const [y, m, d] = trip.startDate.split('-'); startDateObj = new Date(y, m-1, d); }
+            for(let i=1; i<=trip.totalDays; i++) {
+                const assignedDestId = trip.timeline[i]; const destObj = assignedDestId ? trip.destinations.find(d => d.id === assignedDestId) : null;
+                const currentDate = new Date(startDateObj); currentDate.setDate(startDateObj.getDate() + (i - 1));
+                const monthStr = currentDate.toLocaleString('en-US', { month: 'short' }); const dayNumStr = currentDate.getDate(); 
+                let dayClasses = "bg-slate-50 border-slate-200 text-slate-400 hover:border-emerald-300";
+                let dayContent = `<span class="text-[10px] font-bold uppercase opacity-60 leading-none">${monthStr}</span><span class="text-lg font-black leading-none mt-1">${dayNumStr}</span>`;
+                if(destObj) { dayClasses = `bg-[${destObj.color}] border-transparent text-white shadow-md`; dayContent = `<span class="text-[9px] font-bold opacity-80 uppercase leading-none truncate w-full text-center px-1 mb-0.5">${destObj.city.substring(0,4)}</span><span class="text-lg font-black leading-none">${dayNumStr}</span><span class="text-[9px] font-bold uppercase opacity-80 leading-none mt-0.5">${monthStr}</span>`; }
+                html += `<div onclick="assignDayToTrip('${trip.id}', ${i})" class="snap-center cursor-pointer min-w-[60px] h-[72px] rounded-2xl border-2 flex flex-col items-center justify-center transition-all ${dayClasses}" ${destObj ? `style="background-color: ${destObj.color}"` : ''}>${dayContent}</div>`;
+            }
+            html += `</div></div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 fade-in">`;
+            trip.destinations.forEach(dest => {
+                const isActive = dest.id === activeDestId; const daysCount = Object.values(trip.timeline).filter(id => id === dest.id).length;
+                html += `
+                    <div onclick="setActiveDest('${dest.id}')" class="relative bg-white rounded-2xl p-4 border-2 cursor-pointer transition-all shadow-sm flex flex-col justify-between ${isActive ? 'border-emerald-500 ring-4 ring-emerald-50 scale-105' : 'border-slate-100 hover:border-slate-300'}" style="${isActive ? `border-color: ${dest.color}` : `border-left-color: ${dest.color}; border-left-width: 6px;`}">
+                        <div class="flex justify-between items-start mb-2"><span class="text-[10px] font-bold text-white px-2 py-0.5 rounded-full" style="background-color: ${dest.color}">${escHtml(dest.country)}</span><button onclick="removeDestFromTrip('${trip.id}', '${dest.id}', event)" class="text-slate-300 hover:text-rose-500"><i class="fa-solid fa-xmark"></i></button></div>
+                        <h4 class="text-lg font-bold text-slate-800">${escHtml(dest.city)}</h4>
+                        <div class="mt-2 text-xs font-bold text-slate-400 flex items-center justify-between"><span>Assigned: <span style="color: ${dest.color}">${daysCount} Days</span></span>${isActive ? '<i class="fa-solid fa-check-circle text-emerald-500 text-lg"></i>' : ''}</div>
+                    </div>`;
+            });
+            html += `</div>` + window.renderPackingSection(trip.id); contentEl.innerHTML = html;
+        };
+
+        window.updateTripCitySelect = () => {
+            const cName = document.getElementById('trip-country-select').value; const citySel = document.getElementById('trip-city-select');
+            citySel.innerHTML = `<option value="">-- City --</option>`;
+            if(!cName) return citySel.disabled = true;
+            let targetCountry = null; for(const cont in dbTemplate) { const f = dbTemplate[cont].countries.find(c => c.name === cName); if(f){targetCountry=f; break;} }
+            if(targetCountry && targetCountry.cities.length > 0) { targetCountry.cities.forEach(city => { citySel.innerHTML += `<option value="${escHtml(city.name)}">${escHtml(city.name)}</option>`; }); citySel.disabled = false; } else { citySel.innerHTML = `<option value="">No cities</option>`; citySel.disabled = true; }
+        };
+
+        const generateColor = () => { const colors = ['#f43f5e', '#8b5cf6', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#6366f1']; return colors[Math.floor(Math.random() * colors.length)]; };
+
+        const PACKING_GROUPS = {
+            suitcase: { label: 'Suitcase', icon: 'fa-suitcase-rolling', color: '#c2823a', sub: ['Clothes', 'Toiletries', 'Health', 'Electronics', 'Personal', 'Financial'] },
+            backpack: { label: 'Backpack', icon: 'fa-bag-shopping', color: '#0ea5e9' },
+            documents: { label: 'Documents', icon: 'fa-passport', color: '#6366f1' }
+        };
+        const defaultPacking = () => ({ suitcase: { Clothes: ['Shirts', 'Pants', 'Underwear'].map(n => ({ name: n, checked: false })), Toiletries: ['Toothbrush'].map(n => ({ name: n, checked: false })), Health: ['Medications'].map(n => ({ name: n, checked: false })), Electronics: ['Chargers'].map(n => ({ name: n, checked: false })), Personal: ['Sunglasses'].map(n => ({ name: n, checked: false })), Financial: ['Cash'].map(n => ({ name: n, checked: false })) }, backpack: ['Laptop', 'Phone'].map(n => ({ name: n, checked: false })), documents: ['Passport'].map(n => ({ name: n, checked: false })) });
+        const ensurePacking = (trip) => { if (!trip.packing) trip.packing = defaultPacking(); if (!trip.packing.suitcase) trip.packing.suitcase = defaultPacking().suitcase; PACKING_GROUPS.suitcase.sub.forEach(s => { if (!Array.isArray(trip.packing.suitcase[s])) trip.packing.suitcase[s] = []; }); if (!Array.isArray(trip.packing.backpack)) trip.packing.backpack = []; if (!Array.isArray(trip.packing.documents)) trip.packing.documents = []; return trip.packing; };
+        const packingStats = (trip) => { const p = ensurePacking(trip); let total = 0, done = 0; PACKING_GROUPS.suitcase.sub.forEach(s => p.suitcase[s].forEach(i => { total++; if (i.checked) done++; })); p.backpack.forEach(i => { total++; if (i.checked) done++; }); p.documents.forEach(i => { total++; if (i.checked) done++; }); return { total, done, pct: total ? Math.round(done / total * 100) : 0 }; };
+
+        const renderPackingItems = (tripId, path, items, accent) => {
+            let html = `<ul class="space-y-1.5 mb-2">`; if (!items.length) html += `<li class="text-xs italic text-slate-400 py-1">No items yet.</li>`;
+            items.forEach((item, idx) => {
+                html += `<li class="flex items-center gap-2 group"><button onclick="togglePackItem('${tripId}', '${path}', ${idx})" class="w-5 h-5 shrink-0 rounded-md border flex items-center justify-center transition-all ${item.checked ? 'text-white' : 'bg-white border-slate-300 text-transparent'}" style="${item.checked ? `background-color:${accent};border-color:${accent}` : ''}"><i class="fa-solid fa-check text-[10px]"></i></button><span class="text-sm flex-grow ${item.checked ? 'line-through text-slate-400' : 'text-slate-700'}">${escHtml(item.name)}</span><button onclick="deletePackItem('${tripId}', '${path}', ${idx})" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all text-xs px-1"><i class="fa-solid fa-xmark"></i></button></li>`;
+            });
+            return html + `</ul><button onclick="addPackItem('${tripId}', '${path}')" class="text-[11px] font-bold text-slate-400 hover:text-slate-700 transition flex items-center gap-1"><i class="fa-solid fa-plus"></i> Add item</button>`;
+        };
+
+        window.renderPackingSection = (tripId) => {
+            const trip = tripsData.find(t => t.id === tripId); if (!trip) return ''; const p = ensurePacking(trip); const stats = packingStats(trip); const sc = PACKING_GROUPS.suitcase, bp = PACKING_GROUPS.backpack, dc = PACKING_GROUPS.documents;
+            let html = `
+                <div class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200 p-6 shadow-sm mb-6 fade-in">
+                    <div class="flex items-center justify-between mb-4 flex-wrap gap-3"><h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-suitcase-rolling text-emerald-500"></i> Packing Checklist</h3><div class="flex items-center gap-3 flex-grow max-w-xs min-w-[180px]"><div class="flex-grow h-2 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width:${stats.pct}%"></div></div><span class="text-xs font-black text-emerald-700 whitespace-nowrap">${stats.done}/${stats.total} · ${stats.pct}%</span></div></div>
+                    <div class="mb-6"><div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100"><i class="fa-solid ${sc.icon} text-lg" style="color:${sc.color}"></i><h4 class="font-bold text-slate-800">${sc.label}</h4></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+            `;
+            sc.sub.forEach(s => { html += `<div><p class="text-xs font-bold uppercase tracking-wide mb-2" style="color:${sc.color}">${s}</p>${renderPackingItems(tripId, 'suitcase.' + s, p.suitcase[s], sc.color)}</div>`; });
+            html += `</div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div><div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100"><i class="fa-solid ${bp.icon} text-lg" style="color:${bp.color}"></i><h4 class="font-bold text-slate-800">${bp.label}</h4></div>${renderPackingItems(tripId, 'backpack', p.backpack, bp.color)}</div>
+                <div><div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100"><i class="fa-solid ${dc.icon} text-lg" style="color:${dc.color}"></i><h4 class="font-bold text-slate-800">${dc.label}</h4></div>${renderPackingItems(tripId, 'documents', p.documents, dc.color)}</div>
+            </div></div>`; return html;
+        };
+
+        const resolvePackArray = (trip, path) => { const p = ensurePacking(trip); if (path.startsWith('suitcase.')) return p.suitcase[path.split('.')[1]]; if (path === 'backpack') return p.backpack; if (path === 'documents') return p.documents; return null; };
+        window.togglePackItem = async (tripId, path, idx) => { const trip = tripsData.find(t => t.id === tripId); const arr = resolvePackArray(trip, path); if (!arr || !arr[idx]) return; arr[idx].checked = !arr[idx].checked; window.renderTripPlanner(tripId); await syncTripToCloud(trip); };
+        window.deletePackItem = async (tripId, path, idx) => { const trip = tripsData.find(t => t.id === tripId); const arr = resolvePackArray(trip, path); if (!arr) return; arr.splice(idx, 1); window.renderTripPlanner(tripId); await syncTripToCloud(trip); };
+        window.addPackItem = async (tripId, path) => { const name = prompt('Add item:'); if (!name || !name.trim()) return; const trip = tripsData.find(t => t.id === tripId); const arr = resolvePackArray(trip, path); if (!arr) return; arr.push({ name: name.trim(), checked: false }); window.renderTripPlanner(tripId); await syncTripToCloud(trip); };
+        window.openAddTripModal = () => { document.getElementById('new-trip-name').value = ''; document.getElementById('new-trip-date').value = new Date().toISOString().split('T')[0]; document.getElementById('new-trip-days').value = '14'; document.getElementById('add-trip-modal').classList.remove('hidden'); };
+        window.closeAddTripModal = () => document.getElementById('add-trip-modal').classList.add('hidden');
+        window.saveNewTrip = async () => { const name = document.getElementById('new-trip-name').value.trim() || 'Untitled Trip'; const date = document.getElementById('new-trip-date').value; const days = parseInt(document.getElementById('new-trip-days').value) || 14; if(!date) return window.showToast("Please select a start date", "bg-rose-500", "fa-triangle-exclamation"); const newTrip = { id: 'trip_' + Date.now(), name: name, startDate: date, totalDays: days, destinations: [], timeline: {}, budget: { intlFlights: '', domFlights: '', hotels: '', activities: '', restaurants: '', shopping: '' }, packing: defaultPacking(), createdAt: Date.now() }; closeAddTripModal(); await syncTripToCloud(newTrip); window.showToast("Trip created!", "bg-emerald-600"); if(state.view === 'trips') window.renderTrips(); };
+        window.updateTripBudget = async (tripId, field, value) => { const trip = tripsData.find(t => t.id === tripId); if(!trip) return; if(!trip.budget) trip.budget = {}; trip.budget[field] = value; window.renderTripPlanner(tripId); await syncTripToCloud(trip); };
+        window.promptDeleteTrip = (tripId, e) => { e.stopPropagation(); deleteContext = { isTrip: true, tripId }; document.getElementById('confirm-modal').classList.remove('hidden'); };
+        window.addDestToTrip = async (tripId) => { const countrySelect = document.getElementById('trip-country-select'); const citySelect = document.getElementById('trip-city-select'); const country = countrySelect.value; const city = citySelect.value; if(!country || !city) return window.showToast("Select Country & City first", "bg-amber-500", "fa-triangle-exclamation"); const trip = tripsData.find(t => t.id === tripId); if(trip.destinations.find(d => d.city === city && d.country === country)) return window.showToast("City already added"); const newDest = { id: 'd_' + Date.now(), country, city, color: generateColor() }; trip.destinations.push(newDest); activeDestId = newDest.id; await syncTripToCloud(trip); window.renderTripPlanner(tripId); };
+        window.removeDestFromTrip = async (tripId, destId, e) => { e.stopPropagation(); const trip = tripsData.find(t => t.id === tripId); trip.destinations = trip.destinations.filter(d => d.id !== destId); for(let day in trip.timeline) { if(trip.timeline[day] === destId) delete trip.timeline[day]; } if(activeDestId === destId) activeDestId = null; await syncTripToCloud(trip); window.renderTripPlanner(tripId); };
+        window.setActiveDest = (destId) => { activeDestId = destId; window.renderTripPlanner(state.tripId); };
+        window.assignDayToTrip = async (tripId, dayNum) => { if(!activeDestId) return window.showToast("Select a destination card below first!", "bg-amber-500", "fa-triangle-exclamation"); const trip = tripsData.find(t => t.id === tripId); if(trip.timeline[dayNum] === activeDestId) delete trip.timeline[dayNum]; else trip.timeline[dayNum] = activeDestId; window.renderTripPlanner(tripId); await syncTripToCloud(trip); };
+
+        window.renderCountries = (continentName) => {
+            state.view = 'countries'; state.continent = continentName; state.country = null; state.city = null; window.setBackground(null); window.updateBreadcrumb();
+            const countries = dbTemplate[continentName].countries.sort((a, b) => a.name.localeCompare(b.name));
+            const visitedCount = countries.filter(c => c.visited).length; const pct = countries.length ? Math.round((visitedCount / countries.length) * 100) : 0;
+            let html = `
+                <div class="mb-6 fade-in text-center relative"><h2 class="text-4xl font-extrabold text-slate-800 tracking-tight">${escHtml(continentName)}</h2><p class="text-slate-500 mt-1">Select a country to view its cities.</p><div class="max-w-xs mx-auto mt-4"><div class="flex items-center justify-between text-[11px] font-bold text-slate-400 mb-1.5"><span><i class="fa-solid fa-earth-americas mr-1 text-emerald-500"></i> Visited</span><span>${visitedCount} / ${countries.length}</span></div><div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width:${pct}%"></div></div></div></div>
+                <div class="max-w-md mx-auto mb-8 fade-in relative"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input type="text" id="country-search" oninput="filterCountries(this.value)" placeholder="Search countries..." class="w-full bg-white border border-slate-200 rounded-2xl pl-11 pr-4 py-3 text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                <div id="countries-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 fade-in">
+            `;
+            countries.forEach(country => {
+                const hasCities = country.cities && country.cities.length > 0; const isVisited = country.visited; const cn = escAttr(country.name); const cnH = escHtml(country.name);
+                html += `
+                    <div class="country-card relative rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer card-hover shadow-sm border group ${isVisited ? 'visited-card' : 'bg-white border-slate-200'}" data-search="${cnH.toLowerCase()}">
+                        <button onclick="toggleCountryVisited('${continentName}', '${cn}', event)" class="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-all z-10 shadow-sm ${isVisited ? 'bg-emerald-600 text-white scale-110' : 'bg-slate-100 text-slate-300 hover:bg-emerald-100 hover:text-emerald-500'}"><i class="fa-solid fa-check text-[10px]"></i></button>
+                        <div onclick="renderCities('${continentName}', '${cn}', '${country.iso}')" class="w-full h-full flex flex-col items-center"><img src="https://flagcdn.com/w80/${country.iso}.png" class="flag-img w-12 h-auto rounded-sm mb-3 shadow-sm group-hover:scale-110 transition-transform duration-300"><h3 class="font-semibold ${isVisited ? 'text-emerald-800' : 'text-slate-700'} text-sm">${cnH}</h3>${hasCities ? '<span class="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shadow-sm"></span>' : '<span class="mt-2 w-1.5 h-1.5 rounded-full bg-slate-200"></span>'}</div>
+                    </div>`;
+            });
+            html += `<p id="no-country-match" class="col-span-full text-center text-slate-400 italic py-8 hidden">No countries match your search.</p></div>`; contentEl.innerHTML = html;
+        };
+
+        window.filterCountries = (term) => {
+            const q = term.trim().toLowerCase(); const cards = document.querySelectorAll('#countries-grid .country-card'); let shown = 0;
+            cards.forEach(card => { const match = card.getAttribute('data-search').includes(q); card.style.display = match ? '' : 'none'; if (match) shown++; });
+            const empty = document.getElementById('no-country-match'); if (empty) empty.classList.toggle('hidden', shown !== 0);
+        };
+
+        window.renderCities = (continentName, countryName, isoCode) => {
+            state.view = 'cities'; state.continent = continentName; state.country = countryName; state.city = null; window.setBackground(isoCode); window.updateBreadcrumb();
+            const countryData = dbTemplate[continentName].countries.find(c => c.name === countryName); const countryInfo = countryData.info || {};
+            let html = `
+                <div class="mb-10 fade-in relative flex flex-col items-center">
+                    <div class="absolute right-0 top-0"><button onclick="openAddCityModal('${continentName}', '${escAttr(countryName)}')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 font-bold text-sm"><i class="fa-solid fa-plus"></i> Add City</button></div>
+                    <img src="https://flagcdn.com/w160/${isoCode}.png" class="w-24 h-auto rounded-lg shadow-md border border-slate-200 mb-4">
+                    <h2 class="text-4xl font-extrabold text-slate-800 tracking-tight text-center flex items-center justify-center gap-3">${escHtml(countryName)} <a href="https://maps.google.com/?q=${encodeURIComponent(countryName)}" target="_blank" class="text-slate-300 hover:text-emerald-500 transition-colors text-3xl ml-1"><i class="fa-solid fa-map-location-dot"></i></a></h2>
+                </div>
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 shadow-sm mb-6 fade-in">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <a href="https://ar.wikipedia.org/wiki/${encodeURIComponent(countryName)}" target="_blank" class="bg-slate-50 hover:bg-slate-100 p-4 rounded-2xl border border-slate-100 shadow-inner transition-colors group text-center flex flex-col items-center justify-center gap-2"><i class="fa-brands fa-wikipedia-w text-2xl text-slate-400 group-hover:text-slate-600 transition"></i><span class="font-bold text-slate-700 text-sm">Info</span></a>
+                        <a href="https://www.passportindex.org/passport/saudi-arabia/" target="_blank" class="bg-indigo-50 hover:bg-indigo-100 p-4 rounded-2xl border border-indigo-100 shadow-inner transition-colors group text-center flex flex-col items-center justify-center gap-2"><i class="fa-solid fa-passport text-2xl text-indigo-400 group-hover:text-indigo-600 transition"></i><span class="font-bold text-indigo-700 text-sm">Visa</span></a>
+                        <div class="col-span-2 md:col-span-2 bg-emerald-50 p-3 rounded-2xl border border-emerald-100 shadow-inner flex flex-col justify-center"><span class="block text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1 ml-1"><i class="fa-solid fa-building-flag mr-1"></i> Saudi Embassy</span><div class="flex items-center gap-2"><input type="url" placeholder="Paste link here..." value="${countryInfo.embassy || ''}" onchange="updateCountryLink('${continentName}', '${escAttr(countryName)}', 'embassy', this.value, event)" class="w-full bg-white border border-emerald-200 text-emerald-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-xs"><a href="${countryInfo.embassy || '#'}" target="_blank" class="w-9 h-9 shrink-0 bg-emerald-600 text-white rounded-xl flex items-center justify-center hover:bg-emerald-700 transition shadow-sm"><i class="fa-solid fa-arrow-right"></i></a></div></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                        <div class="col-span-1 md:col-span-2 bg-blue-50 p-3 rounded-2xl border border-blue-100 shadow-inner flex flex-col justify-center"><span class="block text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1 ml-1"><i class="fa-solid fa-money-bill-transfer mr-1"></i> Currency Link (XE)</span><div class="flex items-center gap-2"><input type="url" placeholder="Paste XE link here..." value="${countryInfo.currencyLink || ''}" onchange="updateCountryLink('${continentName}', '${escAttr(countryName)}', 'currencyLink', this.value, event)" class="w-full bg-white border border-blue-200 text-blue-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-xs"><a href="${countryInfo.currencyLink || '#'}" target="_blank" class="w-9 h-9 shrink-0 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition shadow-sm"><i class="fa-solid fa-arrow-right"></i></a></div></div>
+                        <div class="flex items-center gap-3 bg-slate-50 p-2 pl-4 rounded-2xl border border-slate-200 focus-within:border-red-300 transition-all"><i class="fa-brands fa-youtube text-red-500 text-xl w-6 text-center"></i><input type="url" placeholder="Paste YouTube link..." value="${countryInfo.youtube || ''}" onchange="updateCountryLink('${continentName}', '${escAttr(countryName)}', 'youtube', this.value, event)" class="flex-grow bg-transparent text-sm focus:outline-none text-slate-700 font-medium w-full min-w-0"><a href="${countryInfo.youtube || '#'}" target="_blank" class="w-10 h-10 shrink-0 bg-white text-slate-400 rounded-xl border border-slate-200 flex items-center justify-center hover:text-red-500 transition"><i class="fa-solid fa-arrow-right"></i></a></div>
+                        <div class="flex items-center gap-3 bg-slate-50 p-2 pl-4 rounded-2xl border border-slate-200 focus-within:border-sky-300 transition-all"><i class="fa-brands fa-telegram text-sky-500 text-xl w-6 text-center"></i><input type="url" placeholder="Paste Telegram link..." value="${countryInfo.telegram || ''}" onchange="updateCountryLink('${continentName}', '${escAttr(countryName)}', 'telegram', this.value, event)" class="flex-grow bg-transparent text-sm focus:outline-none text-slate-700 font-medium w-full min-w-0"><a href="${countryInfo.telegram || '#'}" target="_blank" class="w-10 h-10 shrink-0 bg-white text-slate-400 rounded-xl border border-slate-200 flex items-center justify-center hover:text-sky-500 transition"><i class="fa-solid fa-arrow-right"></i></a></div>
+                        <div class="flex items-center gap-3 bg-slate-50 p-2 pl-4 rounded-2xl border border-slate-200 focus-within:border-yellow-300 transition-all md:col-span-4 lg:col-span-1"><i class="fa-solid fa-note-sticky text-yellow-500 text-xl w-6 text-center"></i><input type="url" placeholder="Paste Google Keep link..." value="${countryInfo.keep || ''}" onchange="updateCountryLink('${continentName}', '${escAttr(countryName)}', 'keep', this.value, event)" class="flex-grow bg-transparent text-sm focus:outline-none text-slate-700 font-medium w-full min-w-0"><a href="${countryInfo.keep || '#'}" target="_blank" class="w-10 h-10 shrink-0 bg-white text-slate-400 rounded-xl border border-slate-200 flex items-center justify-center hover:text-yellow-500 transition"><i class="fa-solid fa-arrow-right"></i></a></div>
+                    </div>
+                </div>
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 shadow-sm mb-10 fade-in">
+                    <div class="flex items-center justify-between mb-5"><h3 class="text-sm font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-blue-500"></i> Additional Notes</h3><button onclick="openAddModal('${continentName}', '${escAttr(countryName)}', null, 'notes')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg transition font-bold"><i class="fa-solid fa-plus mr-1"></i> Add Note</button></div>
+                    ${window.formatList(countryData.notes, "notes", "text-slate-700", "text-blue-500", continentName, countryName, null)}
+                </div>
+            `;
+
+            if (countryData.cities && countryData.cities.length > 0) {
+                html += `<div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">`;
+                countryData.cities.forEach((city, index) => {
+                    const escCity = escAttr(city.name);
+                    html += `
+                        <div class="bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between group relative overflow-hidden">
+                            <div class="absolute -right-4 -top-4 text-9xl opacity-5 text-slate-900 font-bold italic pointer-events-none">#${index+1}</div>
+                            <div onclick="renderCityDetails('${continentName}', '${escAttr(countryName)}', '${escCity}')" class="flex items-center gap-4 cursor-pointer mb-2"><div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 flex items-center justify-center text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shadow-inner shrink-0"><i class="fa-solid fa-city"></i></div><h3 class="text-xl font-bold text-slate-800 truncate">${escHtml(city.name)}</h3></div>
+                            <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-100"><span class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md">City #${index+1}</span><button onclick="promptDeleteCity('${continentName}', '${escAttr(countryName)}', ${index}, event)" class="text-slate-300 hover:text-rose-500 hover:bg-rose-50 w-8 h-8 rounded-lg flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash-can"></i></button></div>
+                        </div>`;
+                });
+                html += `</div>`;
+            } else {
+                html += `<div class="bg-white/80 backdrop-blur-md rounded-3xl border border-slate-200 p-12 text-center fade-in shadow-sm max-w-2xl mx-auto"><div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 text-3xl border border-slate-100"><i class="fa-solid fa-folder-open"></i></div><h3 class="text-2xl font-bold text-slate-700 mb-2">No Cities Listed</h3></div>`;
+            }
+            contentEl.innerHTML = html;
+        };
+
+        window.renderCityDetails = (continentName, countryName, cityName) => {
+            state.view = 'details'; state.city = cityName; window.updateBreadcrumb();
+            const countryData = dbTemplate[continentName].countries.find(c => c.name === countryName); const cityData = countryData.cities.find(c => c.name === cityName); window.setBackground(null);
+            let html = `
+                <div class="mb-8 fade-in relative text-center">
+                    <div class="absolute right-0 top-0"><button onclick="openAddModal('${continentName}', '${escAttr(countryName)}', '${escAttr(cityName)}', 'hotels')" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl shadow-lg transition-all flex items-center gap-2 font-bold text-sm"><i class="fa-solid fa-plus"></i> Add Item</button></div>
+                    <h2 class="text-4xl font-extrabold text-slate-800 tracking-tight flex items-center justify-center gap-3">${escHtml(cityName)} <a href="https://maps.google.com/?q=${encodeURIComponent(cityName + ', ' + countryName)}" target="_blank" class="text-slate-300 hover:text-emerald-500 transition-colors text-3xl ml-1"><i class="fa-solid fa-map-location-dot"></i></a></h2>
+                    <p class="text-slate-500 font-medium mt-1">${escHtml(countryName)}, ${continentName}</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+                    <div class="bg-teal-50/80 backdrop-blur-sm border border-teal-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-teal-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-circle-info text-teal-600"></i> City Info</h3><a href="https://ar.wikipedia.org/wiki/${encodeURIComponent(cityName)}" target="_blank" class="w-full h-[calc(100%-44px)] min-h-[120px] bg-slate-50 hover:bg-slate-100 p-6 rounded-2xl border border-slate-100 shadow-inner transition-colors group text-center flex flex-col items-center justify-center gap-3"><i class="fa-brands fa-wikipedia-w text-4xl text-slate-400 group-hover:text-slate-600 transition"></i><span class="font-bold text-slate-700 text-sm">Read on Wikipedia (AR)</span></a></div>
+                    <div class="bg-purple-50/80 backdrop-blur-sm border border-purple-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-purple-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-plane-departure text-purple-500"></i> Airports</h3>${window.formatList(cityData.airports, "airports", "text-purple-900", "text-purple-600", continentName, countryName, cityName)}</div>
+                    <div class="bg-sky-50/80 backdrop-blur-sm border border-sky-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-sky-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-cloud-sun text-sky-500"></i> Weather</h3>${window.formatList(cityData.weather, "weather", "text-sky-900", "text-sky-600", continentName, countryName, cityName)}</div>
+                    <div class="bg-orange-50/80 backdrop-blur-sm border border-orange-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-orange-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-bed text-orange-500"></i> Hotels</h3>${window.formatList(cityData.hotels, "hotels", "text-orange-900", "text-orange-500", continentName, countryName, cityName)}</div>
+                    <div class="bg-amber-50/80 backdrop-blur-sm border border-amber-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-amber-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-utensils text-amber-500"></i> Restaurants</h3>${window.formatList(cityData.restaurants, "restaurants", "text-amber-900", "text-amber-500", continentName, countryName, cityName)}</div>
+                    <div class="bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-train text-indigo-500"></i> Transportation</h3>${window.formatList(cityData.transportation, "transportation", "text-indigo-900", "text-indigo-500", continentName, countryName, cityName)}</div>
+                    <div class="bg-emerald-50/80 backdrop-blur-sm border border-emerald-100 rounded-3xl p-6 shadow-sm"><h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-ticket text-emerald-500"></i> Activities</h3>${window.formatList(cityData.activities, "activities", "text-emerald-900", "text-emerald-500", continentName, countryName, cityName)}</div>
+                    <div class="bg-violet-50/80 backdrop-blur-sm border border-violet-100 rounded-3xl p-6 shadow-sm lg:col-span-2"><h3 class="text-lg font-bold text-violet-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-bag-shopping text-violet-500"></i> Shopping</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">${window.formatList(cityData.shopping, "shopping", "text-violet-900", "text-violet-500", continentName, countryName, cityName)}</div></div>
+                    <div class="bg-teal-50/80 backdrop-blur-sm border border-teal-100 rounded-3xl p-6 shadow-sm lg:col-span-3"><h3 class="text-lg font-bold text-teal-900 flex items-center gap-2 mb-5"><i class="fa-solid fa-pen-to-square text-teal-600"></i> Additional Notes</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">${window.formatList(cityData.notes, "notes", "text-teal-900", "text-teal-600", continentName, countryName, cityName)}</div></div>
+                </div>`;
+            contentEl.innerHTML = html;
+        };
+
+        window.updateBreadcrumb = () => {
+            let html = `<a href="index.html" class="hover:text-emerald-600 transition font-bold" title="العودة للمستودع الرئيسي"><i class="fa-solid fa-house mr-1"></i> Home</a>`;
+            html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <button onclick="renderContinents()" class="hover:text-slate-900 transition font-medium">Travel Archive</button>`;
+            if (state.view === 'trips' || state.view === 'tripDetails') {
+                html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <button onclick="renderTrips()" class="hover:text-slate-900 transition">Next Trip</button>`;
+                if(state.tripId) { const trip = tripsData.find(t=>t.id === state.tripId); if(trip) html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <span class="text-emerald-600 font-bold">${escHtml(trip.name)}</span>`; }
+            } else {
+                if (state.continent) html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <button onclick="renderCountries('${escAttr(state.continent)}')" class="hover:text-slate-900 transition">${escHtml(state.continent)}</button>`;
+                if (state.country) { const countryData = dbTemplate[state.continent].countries.find(c => c.name === state.country); html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <button onclick="renderCities('${escAttr(state.continent)}', '${escAttr(state.country)}', '${countryData.iso}')" class="hover:text-slate-900 transition">${escHtml(state.country)}</button>`; }
+                if (state.city) html += `<i class="fa-solid fa-chevron-right text-[10px] mx-2 text-slate-300"></i> <span class="text-blue-600 font-bold">${escHtml(state.city)}</span>`;
+            }
+            breadcrumbEl.innerHTML = html;
+        };
+
+        let currentEditContext = null, deleteContext = null, cityAddContext = null;
+        window.openAddModal = (continent, country, city, defaultCategory = 'hotels') => { currentEditContext = { continent, country, city }; const catContainer = document.getElementById('category-container'); const catSelect = document.getElementById('new-item-category'); if (!city) { catContainer.classList.add('hidden'); document.getElementById('modal-category-title').textContent = "Note"; } else { catContainer.classList.remove('hidden'); catSelect.value = defaultCategory; document.getElementById('modal-category-title').textContent = "Item"; } document.getElementById('modal-action-title').textContent = 'Add'; document.getElementById('modal-save-btn').textContent = 'Save Item'; document.getElementById('new-item-name').value = ''; document.getElementById('new-item-link').value = ''; document.getElementById('new-item-notes').value = ''; document.getElementById('add-modal').classList.remove('hidden'); setTimeout(() => document.getElementById('new-item-name').focus(), 100); };
+        window.openEditModal = (continent, country, city, category, index) => { currentEditContext = { continent, country, city, category, index, isEdit: true }; const catContainer = document.getElementById('category-container'); let arr; if (city) { const cityData = dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city); arr = cityData[category]; } else { arr = dbTemplate[continent].countries.find(c => c.name === country).notes; } let item = arr && arr[index]; if (typeof item === 'string') item = { name: item }; if (!item) return; catContainer.classList.add('hidden'); document.getElementById('modal-action-title').textContent = 'Edit'; document.getElementById('modal-category-title').textContent = city ? 'Item' : 'Note'; document.getElementById('modal-save-btn').textContent = 'Update Item'; document.getElementById('new-item-name').value = item.name || ''; document.getElementById('new-item-link').value = item.link || ''; document.getElementById('new-item-notes').value = item.notes || ''; document.getElementById('add-modal').classList.remove('hidden'); setTimeout(() => document.getElementById('new-item-name').focus(), 100); };
+        window.closeAddModal = () => { document.getElementById('add-modal').classList.add('hidden'); currentEditContext = null; };
+        window.openAddCityModal = (continent, country) => { cityAddContext = { continent, country }; document.getElementById('new-city-name').value = ''; document.getElementById('add-city-modal').classList.remove('hidden'); setTimeout(() => document.getElementById('new-city-name').focus(), 100); };
+        window.closeAddCityModal = () => { document.getElementById('add-city-modal').classList.add('hidden'); cityAddContext = null; };
+        window.saveNewCity = async () => { const name = document.getElementById('new-city-name').value.trim(); if (!name || !cityAddContext) return; const { continent, country } = cityAddContext; const countryData = dbTemplate[continent].countries.find(c => c.name === country); if(countryData.cities.find(c => c.name.toLowerCase() === name.toLowerCase())) { window.showToast("City already exists", "bg-amber-500", "fa-triangle-exclamation"); return closeAddCityModal(); } countryData.cities.push(initCityObj(name)); closeAddCityModal(); window.renderCities(continent, country, countryData.iso); window.showToast("City added successfully!", "bg-emerald-600", "fa-circle-check"); await syncCountryToCloud(); };
+        window.saveNewItem = async () => { const name = document.getElementById('new-item-name').value.trim(); const link = document.getElementById('new-item-link').value.trim(); const notes = document.getElementById('new-item-notes').value.trim(); if (!name || !currentEditContext) return; const { continent, country, city, isEdit } = currentEditContext; const newItem = { name }; if (link) newItem.link = link; if (notes) newItem.notes = notes; if (isEdit) { const category = currentEditContext.category; const index = currentEditContext.index; const target = city ? dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city) : dbTemplate[continent].countries.find(c => c.name === country); if (typeof target[category] === 'string') target[category] = [{ name: target[category] }]; if (Array.isArray(target[category]) && target[category][index] !== undefined) { target[category][index] = newItem; } closeAddModal(); if (city) { window.renderCityDetails(continent, country, city); window.showToast("Item updated!", "bg-blue-600", "fa-pen"); await syncToCloud(); } else { window.renderCities(continent, country, dbTemplate[continent].countries.find(c => c.name === country).iso); window.showToast("Note updated!", "bg-blue-600", "fa-pen"); await syncCountryToCloud(); } return; } let category = !city ? 'notes' : document.getElementById('new-item-category').value; if (city) { const cityData = dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city); if (!cityData[category]) cityData[category] = []; else if (typeof cityData[category] === 'string') cityData[category] = [{ name: cityData[category] }]; cityData[category].push(newItem); closeAddModal(); window.renderCityDetails(continent, country, city); window.showToast("Added successfully!", "bg-emerald-600", "fa-circle-check"); await syncToCloud(); } else { const countryData = dbTemplate[continent].countries.find(c => c.name === country); if (!countryData.notes) countryData.notes = []; countryData.notes.push(newItem); closeAddModal(); window.renderCities(continent, country, countryData.iso); window.showToast("Note added successfully!", "bg-emerald-600", "fa-circle-check"); await syncCountryToCloud(); } };
+        window.promptDelete = (continent, country, city, category, index) => { deleteContext = { continent, country, city, category, index }; document.getElementById('confirm-modal').classList.remove('hidden'); };
+        window.closeConfirmModal = () => { document.getElementById('confirm-modal').classList.add('hidden'); deleteContext = null; };
+        window.executeDelete = async () => { if (!deleteContext) return; if(deleteContext.isTrip) { await deleteTripFromCloud(deleteContext.tripId); closeConfirmModal(); window.showToast("Trip deleted", "bg-rose-600", "fa-trash-can"); if(state.view === 'trips') window.renderTrips(); return; } if(deleteContext.isCity) { const { continent, country, index } = deleteContext; const countryData = dbTemplate[continent].countries.find(c => c.name === country); countryData.cities.splice(index, 1); closeConfirmModal(); window.renderCities(continent, country, countryData.iso); window.showToast("City deleted", "bg-rose-600", "fa-trash-can"); await syncCountryToCloud(); return; } const { continent, country, city, category, index } = deleteContext; if (city) { const cityData = dbTemplate[continent].countries.find(c => c.name === country).cities.find(c => c.name === city); cityData[category].splice(index, 1); closeConfirmModal(); window.renderCityDetails(continent, country, city); window.showToast("Item deleted", "bg-rose-600", "fa-trash-can"); await syncToCloud(); } else { const countryData = dbTemplate[continent].countries.find(c => c.name === country); countryData[category].splice(index, 1); closeConfirmModal(); window.renderCities(continent, country, countryData.iso); window.showToast("Note deleted", "bg-rose-600", "fa-trash-can"); await syncCountryToCloud(); } };
+        window.promptDeleteCity = (continent, country, index, event) => { event.stopPropagation(); deleteContext = { isCity: true, continent, country, index }; document.getElementById('confirm-modal').classList.remove('hidden'); };
+        window.showToast = (msg, colorClass = "bg-emerald-600", iconClass = "fa-circle-check") => { const toast = document.getElementById('toast-notification'); const icon = document.getElementById('toast-icon'); toast.className = `fixed bottom-5 left-1/2 transform -translate-x-1/2 ${colorClass} text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 z-[100] flex items-center gap-3`; icon.className = `fa-solid ${iconClass}`; document.getElementById('toast-message').textContent = msg; toast.classList.remove('translate-y-24', 'opacity-0'); setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000); };
+
+        document.addEventListener('keydown', (e) => {
+            const open = (id) => !document.getElementById(id).classList.contains('hidden');
+            if (e.key === 'Escape') { closeAddModal(); closeAddCityModal(); closeAddTripModal(); closeConfirmModal(); } 
+            else if (e.key === 'Enter') { if (open('confirm-modal')) { e.preventDefault(); executeDelete(); } else if (open('add-modal')) { e.preventDefault(); saveNewItem(); } else if (open('add-city-modal')) { e.preventDefault(); saveNewCity(); } else if (open('add-trip-modal')) { e.preventDefault(); saveNewTrip(); } }
+        });
+
+        window.onload = () => {
+            loadLocal();
+            window.renderContinents();
+            setupFirebase(); // تهيئة المزامنة السحابية والحماية
+        };
+    </script>
+</body>
+</html>
