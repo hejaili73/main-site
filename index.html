@@ -287,6 +287,35 @@
                 noResults.style.display = visible === 0 ? 'block' : 'none';
             });
         })();
+    <!-- Firebase Auth Guard (الحارس) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDF3GHcEs-By2HQBpF0905LLdV6lV2wzO4",
+            authDomain: "hejaili-ec4b9.firebaseapp.com",
+            projectId: "hejaili-ec4b9",
+            storageBucket: "hejaili-ec4b9.firebasestorage.app",
+            messagingSenderId: "656532128742",
+            appId: "1:656532128742:web:b6828996ab261bea6c8c27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // التحقق من الدخول
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // طرد غير المسجلين إلى صفحة الدخول
+                window.location.href = "login.html";
+            }
+        });
+
+        // دالة تسجيل الخروج (يمكنك ربطها بزر في الصفحة الرئيسية لاحقاً إذا أردت)
+        window.logoutUser = () => {
+            signOut(auth).then(() => { window.location.href = "login.html"; });
+        };
     </script>
 </body>
 </html>
