@@ -1,0 +1,58 @@
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // مفاتيح الربط الخاصة بمشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDF3GHcEs-By2HQBpF0905LLdV6lV2wzO4",
+            authDomain: "hejaili-ec4b9.firebaseapp.com",
+            projectId: "hejaili-ec4b9",
+            storageBucket: "hejaili-ec4b9.firebasestorage.app",
+            messagingSenderId: "656532128742",
+            appId: "1:656532128742:web:b6828996ab261bea6c8c27"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // واجهة المستخدم
+        const loginForm = document.getElementById('login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('login-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const errorText = document.getElementById('error-text');
+
+        // التحقق مما إذا كان المستخدم مسجلاً بالفعل لترحيله للرئيسية
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "travel.html"; // توجيه لصفحة السفر (أو index.html) بعد الدخول
+            }
+        });
+
+        // عملية تسجيل الدخول
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            loginBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري التحقق...';
+            loginBtn.disabled = true;
+            errorMsg.classList.add('hidden');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // الدخول ناجح، سيتم التوجيه تلقائياً
+                })
+                .catch((error) => {
+                    loginBtn.innerHTML = '<span>دخول آمن</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                    loginBtn.disabled = false;
+                    errorMsg.classList.remove('hidden');
+                    errorText.textContent = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                });
+        });
+    </script>
+</body>
+</html>
