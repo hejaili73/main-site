@@ -651,14 +651,16 @@
                 .toLowerCase();
         }
 
-        // ===== المزامنة السحابية (Namecheap) =====
+        // ===== المزامنة السحابية (محميّة برمز تسجيل الدخول) =====
         const API_URL = 'api.php';
-        const API_KEY = 'Hejaili_2026_Secure';
         const MODULE_NAME = 'thawab';
 
         async function loadDB() {
             try {
-                const response = await fetch(`${API_URL}?key=${API_KEY}&module=${MODULE_NAME}`);
+                const token = await window.hejailiToken();
+                const response = await fetch(`${API_URL}?module=${MODULE_NAME}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     if (Array.isArray(data) && data.length && data[0].sections) {
@@ -684,10 +686,11 @@
         async function saveDB() {
             localStorage.setItem('thawab_db_v1', JSON.stringify(database));
             try {
+                const token = await window.hejailiToken();
                 await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: API_KEY, module: MODULE_NAME, data: database })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ module: MODULE_NAME, data: database })
                 });
             } catch (e) { console.error('خطأ في المزامنة السحابية'); }
         }
