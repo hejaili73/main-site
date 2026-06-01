@@ -7,6 +7,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, getIdToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDF3GHcEs-By2HQBpF0905LLdV6lV2wzO4",
@@ -19,6 +20,7 @@ const firebaseConfig = {
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db   = getFirestore(app);
 
 function reveal() { document.documentElement.classList.add('auth-ready'); }
 
@@ -38,8 +40,16 @@ window.hejailiLogout = function () {
     signOut(auth).then(() => window.location.replace("login.html"));
 };
 
-// إرجاع رمز المستخدم الحالي لإرساله مع طلبات api.php
+// رمز المستخدم الحالي (يُستخدم عند الحاجة)
 window.hejailiToken = async function () {
     const u = auth.currentUser;
     return u ? await getIdToken(u) : null;
+};
+
+// أدوات Firestore المشتركة (تستخدمها صفحات الأقسام للمزامنة السحابية)
+window.hejailiFS = {
+    docRef: (col, id) => doc(db, col, id),
+    getDoc:    (ref)        => getDoc(ref),
+    setDoc:    (ref, data)  => setDoc(ref, data),
+    onSnapshot:(ref, cb)    => onSnapshot(ref, cb)
 };

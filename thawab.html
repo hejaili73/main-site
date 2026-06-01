@@ -651,48 +651,67 @@
                 .toLowerCase();
         }
 
-        // ===== المزامنة السحابية (محميّة برمز تسجيل الدخول) =====
-        const API_URL = 'api.php';
-        const MODULE_NAME = 'thawab';
+        // ===== المزامنة السحابية عبر Firestore (مثل صفحة السفر) =====
+        // مرجع وثيقة بيانات ثواب في فايربيس
+        function thawabDocRef() {
+            return (window.hejailiFS && window.hejailiFS.docRef)
+                ? window.hejailiFS.docRef('family_data', 'thawab')
+                : null;
+        }
 
         async function loadDB() {
+            // نسخة محلية احتياطية أولاً (تظهر فوراً قبل وصول السحابة)
             try {
-                const token = await window.hejailiToken();
-                const response = await fetch(`${API_URL}?module=${MODULE_NAME}`, {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    if (Array.isArray(data) && data.length && data[0].sections) {
-                        database = data;
-                        // إظهار شارة السحابة
-                        const badge = document.getElementById('cloudBadge');
-                        if(badge) {
-                            badge.classList.remove('hidden');
-                            badge.classList.add('flex');
-                        }
-                    }
-                }
-            } catch (e) { 
-                console.warn('تعذر الاتصال بالسحابة، سيتم استخدام التخزين المحلي', e);
                 const raw = localStorage.getItem('thawab_db_v1');
                 if (raw) {
                     const parsed = JSON.parse(raw);
                     if (Array.isArray(parsed) && parsed.length) database = parsed;
                 }
+            } catch (e) {}
+
+            // ثم نجلب من فايربيس ونستمع للتحديثات الحيّة
+            try {
+                const fs = window.hejailiFS;
+                if (!fs) return;
+                const snap = await fs.getDoc(thawabDocRef());
+                if (snap && snap.exists()) {
+                    const data = snap.data();
+                    if (Array.isArray(data.sections) && data.sections.length) {
+                        database = data.sections;
+                        showCloudBadge();
+                        renderStats(); renderChapters(); selectChapter(currentChapterIndex || 0);
+                    }
+                } else {
+                    showCloudBadge();
+                }
+                // الاستماع الحيّ: أي تعديل من جهاز آخر يظهر تلقائياً
+                fs.onSnapshot(thawabDocRef(), (s) => {
+                    if (s && s.exists()) {
+                        const d = s.data();
+                        if (Array.isArray(d.sections)) {
+                            database = d.sections;
+                            renderStats(); renderChapters(); selectChapter(currentChapterIndex || 0);
+                        }
+                    }
+                });
+            } catch (e) {
+                console.warn('تعذر الاتصال بفايربيس، سيتم استخدام التخزين المحلي', e);
             }
+        }
+
+        function showCloudBadge() {
+            const badge = document.getElementById('cloudBadge');
+            if (badge) { badge.classList.remove('hidden'); badge.classList.add('flex'); }
         }
 
         async function saveDB() {
             localStorage.setItem('thawab_db_v1', JSON.stringify(database));
             try {
-                const token = await window.hejailiToken();
-                await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ module: MODULE_NAME, data: database })
-                });
-            } catch (e) { console.error('خطأ في المزامنة السحابية'); }
+                const fs = window.hejailiFS;
+                if (!fs) return;
+                await fs.setDoc(thawabDocRef(), { sections: database, savedAt: Date.now() });
+                showCloudBadge();
+            } catch (e) { console.error('خطأ في المزامنة السحابية', e); }
         }
 
         // ===== الإحصاءات =====
