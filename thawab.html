@@ -24,45 +24,20 @@
                         naskh: ['Amiri', 'Tajawal', 'serif'],
                     },
                     colors: {
-                        // البنّي (الهوية الأساسية) — مستوحى من ترويسة HEJAILI
                         brand: {
-                            50:  '#f6efe0',
-                            100: '#e9dcc2',
-                            200: '#d8c39c',
-                            300: '#c2a86f',
-                            400: '#a07d4a',
-                            500: '#7c5f37',
-                            600: '#5f4a2b',
-                            700: '#4a3924',
-                            800: '#362a19',
-                            900: '#2a2013',
-                            950: '#1b140b',
+                            50:  '#f6efe0', 100: '#e9dcc2', 200: '#d8c39c', 300: '#c2a86f',
+                            400: '#a07d4a', 500: '#7c5f37', 600: '#5f4a2b', 700: '#4a3924',
+                            800: '#362a19', 900: '#2a2013', 950: '#1b140b',
                         },
-                        // الذهبي العتيق (لون التمييز)
                         gold: {
-                            50:  '#faf4e4',
-                            100: '#f1e6c6',
-                            300: '#dcc079',
-                            500: '#c19a3e',
-                            700: '#9a7a26',
+                            50:  '#faf4e4', 100: '#f1e6c6', 300: '#dcc079', 500: '#c19a3e', 700: '#9a7a26',
                         },
-                        // الورق (الخلفيات الكريمية)
-                        paper: {
-                            DEFAULT: '#f0e8d6',
-                            card: '#f7f1e3',
-                            deep: '#e6dcc3',
-                        },
+                        paper: { DEFAULT: '#f0e8d6', card: '#f7f1e3', deep: '#e6dcc3' },
                         ink: '#2e2417',
                     },
                     keyframes: {
-                        fadeUp: {
-                            '0%': { opacity: '0', transform: 'translateY(12px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        pop: {
-                            '0%': { opacity: '0', transform: 'scale(.96)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' },
-                        }
+                        fadeUp: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        pop: { '0%': { opacity: '0', transform: 'scale(.96)' }, '100%': { opacity: '1', transform: 'scale(1)' } }
                     },
                     animation: {
                         fadeUp: 'fadeUp .5s ease both',
@@ -73,27 +48,23 @@
         }
     </script>
 
-    <!-- تحميل الخطوط العربية: تجوال للواجهة، وأميري للنصوص الشريفة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* شريط التمرير (دافئ) */
         ::-webkit-scrollbar { width: 9px; height: 9px; }
         ::-webkit-scrollbar-track { background: #efe6d3; }
         ::-webkit-scrollbar-thumb { background: #cbb98f; border-radius: 6px; }
         ::-webkit-scrollbar-thumb:hover { background: #b09a6a; }
         html { scrollbar-color: #cbb98f #efe6d3; }
 
-        /* شريط زجاجي كريمي (لشريط الأبواب) */
         .glass-header {
             background: rgba(244, 237, 221, 0.85);
             backdrop-filter: saturate(160%) blur(12px);
             -webkit-backdrop-filter: saturate(160%) blur(12px);
         }
 
-        /* خلفية كريمية بزخرفة دوائر مطابقة للصفحة الرئيسية */
         body {
             background-color: #f0e8d6;
             background-image:
@@ -101,41 +72,21 @@
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cg fill='none' stroke='%23b89a52' stroke-opacity='0.10' stroke-width='1'%3E%3Ccircle cx='27' cy='27' r='12'/%3E%3Ccircle cx='0' cy='0' r='12'/%3E%3Ccircle cx='54' cy='0' r='12'/%3E%3Ccircle cx='0' cy='54' r='12'/%3E%3Ccircle cx='54' cy='54' r='12'/%3E%3C/g%3E%3C/svg%3E");
         }
 
-        .hadith-naskh {
-            font-family: 'Amiri', 'Tajawal', serif;
-            line-height: 2.05;
-        }
-
-        /* خط زخرفي تحت العناوين */
+        .hadith-naskh { font-family: 'Amiri', 'Tajawal', serif; line-height: 2.05; }
         .title-rule::after {
-            content: "";
-            display: block;
-            width: 64px;
-            height: 3px;
-            margin: 14px auto 0;
-            border-radius: 99px;
-            background: linear-gradient(90deg, transparent, #c19a3e, transparent);
+            content: ""; display: block; width: 64px; height: 3px; margin: 14px auto 0;
+            border-radius: 99px; background: linear-gradient(90deg, transparent, #c19a3e, transparent);
         }
-
-        .focus-ring:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(193,154,62,0.25);
-            border-color: #c19a3e;
-        }
-
+        .focus-ring:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(193,154,62,0.25); border-color: #c19a3e; }
         mark.hl { background: #f0dca0; color: #2e2417; border-radius: 4px; padding: 0 3px; }
-
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation: none !important; scroll-behavior: auto !important; }
-        }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; scroll-behavior: auto !important; } }
     </style>
 </head>
 <body class="text-stone-800 antialiased min-h-screen flex flex-col">
 
-    <!-- شريط التنقل (Navbar) — هوية بنّية ذهبية مطابقة للصفحة الرئيسية -->
+    <!-- شريط التنقل (Navbar) -->
     <header class="sticky top-0 z-50 bg-ink border-b-2 border-gold-500/70 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 relative flex items-center justify-center">
             
@@ -157,6 +108,12 @@
                 <span class="hidden sm:inline text-sm font-bold">إضافة</span>
             </button>
 
+            <!-- شارة المزامنة السحابية (مخفية افتراضياً وتظهر بالجانب الأيسر) -->
+            <span id="cloudBadge" class="hidden absolute left-28 sm:left-32 lg:left-36 items-center gap-1.5 text-xs font-bold tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-1.5 rounded-lg border border-emerald-500/20 transition-all">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span class="hidden sm:inline">متصل بالسحابة</span>
+            </span>
+
         </div>
     </header>
 
@@ -168,13 +125,11 @@
                     <svg class="w-4 h-4 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     الأبواب
                 </span>
-                <!-- سهم لتحريك الأسماء (يمين) -->
                 <button id="chScrollStart" type="button" aria-label="تحريك الأبواب يميناً"
                     class="shrink-0 my-1.5 inline-flex items-center justify-center w-8 h-8 rounded-lg border border-paper-deep bg-paper-card text-brand-700 hover:bg-gold-500 hover:text-ink hover:border-gold-500 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/30">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 <div id="chaptersList" class="flex gap-2 overflow-x-auto py-2.5 grow hide-scrollbar scroll-smooth"></div>
-                <!-- سهم لتحريك الأسماء (يسار) -->
                 <button id="chScrollEnd" type="button" aria-label="تحريك الأبواب يساراً"
                     class="shrink-0 my-1.5 inline-flex items-center justify-center w-8 h-8 rounded-lg border border-paper-deep bg-paper-card text-brand-700 hover:bg-gold-500 hover:text-ink hover:border-gold-500 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/30">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M15 19l-7-7 7-7"/></svg>
@@ -203,38 +158,26 @@
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-
             <!-- شريط الإحصاءات -->
             <div id="statsBar" class="flex items-center justify-center gap-6 sm:gap-10 mt-6 text-center text-stone-600"></div>
         </section>
 
         <!-- منطقة العرض الرئيسية -->
         <div id="main-content" class="w-full">
-
-            <!-- عنوان الباب النشط -->
             <div id="selectedChapterHeader" class="text-center mb-7">
                 <h2 id="selectedChapterTitle" class="font-naskh inline-block px-8 py-3 bg-paper-card text-brand-800 rounded-2xl border border-paper-deep text-xl md:text-2xl font-bold shadow-sm"></h2>
             </div>
-
-            <!-- حاوية الأقسام (Tabs) -->
             <div id="sectionsContainer" class="hidden mb-8 bg-paper-card/70 p-2 rounded-2xl shadow-sm border border-paper-deep flex flex-wrap justify-center gap-2"></div>
-
-            <!-- حاوية الأحاديث -->
             <div id="hadithsContainer" class="space-y-6"></div>
-
-            <!-- حاوية نتائج البحث -->
             <div id="searchResultsContainer" class="hidden space-y-6"></div>
-
         </div>
     </main>
 
-    <!-- زر العودة للأعلى -->
     <button id="backToTop" aria-label="العودة إلى الأعلى"
         class="fixed bottom-6 left-6 z-40 hidden h-11 w-11 items-center justify-center rounded-full bg-brand-700 text-white shadow-lg shadow-brand-700/30 hover:bg-brand-800 transition-all">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
     </button>
 
-    <!-- التذييل -->
     <footer class="bg-brand-800 border-t-2 border-gold-500/40 py-5 mt-12"></footer>
 
     <!-- نافذة إضافة المحتوى -->
@@ -289,7 +232,7 @@
 
     <!-- المنطق البرمجي (JavaScript) -->
     <script>
-        // قاعدة البيانات المحلية (JSON)
+        // قاعدة البيانات الأولية
         let database = [
             {
                 id: 1, title: "أبواب العلم",
@@ -693,16 +636,56 @@
         const backToTopBtn = document.getElementById('backToTop');
         const toastEl = document.getElementById('toast');
 
-        // ===== أدوات النص العربي =====
-        // تطبيع النص: إزالة التشكيل وتوحيد الألف والياء والتاء المربوطة لبحث أكثر مرونة
+        // تطبيع النص للبحث
         function normalizeArabic(str) {
             return (str || '')
-                .replace(/[\u064B-\u065F\u0670\u0640]/g, '') // التشكيل والتطويل
-                .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627') // الهمزات → ا
-                .replace(/\u0649/g, '\u064A') // ى → ي
-                .replace(/\u0629/g, '\u0647') // ة → ه
-                .replace(/[\u0624\u0626]/g, '\u0621') // ؤ ئ → ء
+                .replace(/[\u064B-\u065F\u0670\u0640]/g, '') 
+                .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627') 
+                .replace(/\u0649/g, '\u064A') 
+                .replace(/\u0629/g, '\u0647') 
+                .replace(/[\u0624\u0626]/g, '\u0621') 
                 .toLowerCase();
+        }
+
+        // ===== المزامنة السحابية (Namecheap) =====
+        const API_URL = 'api.php';
+        const API_KEY = 'Hejaili_2026_Secure';
+        const MODULE_NAME = 'thawab';
+
+        async function loadDB() {
+            try {
+                const response = await fetch(`${API_URL}?key=${API_KEY}&module=${MODULE_NAME}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length && data[0].sections) {
+                        database = data;
+                        // إظهار شارة السحابة
+                        const badge = document.getElementById('cloudBadge');
+                        if(badge) {
+                            badge.classList.remove('hidden');
+                            badge.classList.add('flex');
+                        }
+                    }
+                }
+            } catch (e) { 
+                console.warn('تعذر الاتصال بالسحابة، سيتم استخدام التخزين المحلي', e);
+                const raw = localStorage.getItem('thawab_db_v1');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length) database = parsed;
+                }
+            }
+        }
+
+        async function saveDB() {
+            localStorage.setItem('thawab_db_v1', JSON.stringify(database));
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: API_KEY, module: MODULE_NAME, data: database })
+                });
+            } catch (e) { console.error('خطأ في المزامنة السحابية'); }
         }
 
         // ===== الإحصاءات =====
@@ -727,11 +710,14 @@
                 `<span class="h-8 w-px bg-stone-200"></span>` + item(s.hadiths, 'حديثاً');
         }
 
-        // ===== التشغيل =====
-        function initApp() {
+        // ===== التشغيل والتهيئة =====
+        async function initApp() {
             const yearEl = document.getElementById('year');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
-            loadDB();
+            
+            // الانتظار حتى يتم تحميل البيانات السحابية من Namecheap (مرة واحدة فقط)
+            await loadDB(); 
+            
             renderStats();
             renderChapters();
             selectChapter(0);
@@ -752,7 +738,6 @@
                 searchInput.focus();
             });
 
-            // اختصار: الضغط على "/" يركّز على البحث
             document.addEventListener('keydown', (e) => {
                 if (e.key === '/' && document.activeElement !== searchInput) {
                     e.preventDefault();
@@ -760,21 +745,18 @@
                 }
             });
 
-            // زر العودة للأعلى
             window.addEventListener('scroll', () => {
                 backToTopBtn.classList.toggle('hidden', window.scrollY < 400);
                 backToTopBtn.classList.toggle('flex', window.scrollY >= 400);
             });
             backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-            // أسهم تحريك شريط الأبواب
             const chStart = document.getElementById('chScrollStart');
             const chEnd = document.getElementById('chScrollEnd');
             const scrollAmount = () => Math.max(160, chaptersListEl.clientWidth * 0.7);
             if (chStart) chStart.addEventListener('click', () => chaptersListEl.scrollBy({ left: -scrollAmount(), behavior: 'smooth' }));
             if (chEnd) chEnd.addEventListener('click', () => chaptersListEl.scrollBy({ left: scrollAmount(), behavior: 'smooth' }));
 
-            // إخفاء الأسهم عند عدم وجود فائض للتمرير
             const updateArrows = () => {
                 const overflow = chaptersListEl.scrollWidth > chaptersListEl.clientWidth + 4;
                 [chStart, chEnd].forEach(b => { if (b) b.classList.toggle('hidden', !overflow); });
@@ -973,7 +955,6 @@
             }
         }
 
-        // تمييز كلمة البحث (مع مراعاة التطبيع العربي)
         function highlightSearch(text) {
             if (!isSearching || !searchInput.value) return text;
             const query = searchInput.value.trim();
@@ -983,7 +964,6 @@
             const normChars = chars.map(c => normalizeArabic(c));
             let result = '', i = 0;
             while (i < chars.length) {
-                // محاولة مطابقة بدءاً من الموضع i بعد التطبيع
                 let j = i, buf = '';
                 while (j < chars.length && buf.length < nq.length) {
                     buf += normChars[j];
@@ -1004,14 +984,12 @@
             return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
-        // ===== تبديل وضع البحث =====
         function toggleSearchMode(active) {
             const els = [selectedChapterHeader, sectionsContainerEl, hadithsContainerEl];
             els.forEach(el => el.classList.toggle('hidden', active));
             searchResultsContainerEl.classList.toggle('hidden', !active);
         }
 
-        // ===== إشعار النسخ =====
         let toastTimer = null;
         function showToast(msg) {
             document.getElementById('toastMsg').textContent = msg;
@@ -1022,27 +1000,6 @@
                 toastEl.classList.add('hidden');
                 toastEl.classList.remove('flex');
             }, 1800);
-        }
-
-        // ===== التخزين المحلي (يعمل على موقعك؛ ويتعطّل بهدوء داخل المعاينة) =====
-        const STORAGE_KEY = 'thawab_db_v1';
-
-        function loadDB() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    if (Array.isArray(parsed) && parsed.length && parsed[0].sections) {
-                        database = parsed;
-                    }
-                }
-            } catch (e) { /* تُتجاهل: لا تخزين متاح */ }
-        }
-
-        function saveDB() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(database));
-            } catch (e) { /* تُتجاهل */ }
         }
 
         // ===== نافذة الإضافة =====
@@ -1059,7 +1016,6 @@
         ];
 
         function setupAddModal() {
-            // أزرار النوع
             addTypesEl.innerHTML = '';
             TYPES.forEach(t => {
                 const b = document.createElement('button');
@@ -1223,11 +1179,11 @@
 
         function resetDB() {
             if (!confirm('استعادة البيانات الأصلية؟ سيُحذف كل ما أضفته في هذا المتصفح.')) return;
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            try { localStorage.removeItem('thawab_db_v1'); } catch (e) {}
             location.reload();
         }
 
-        // تشغيل التطبيق
+        // تشغيل التطبيق (بدون أي تكرار)
         window.onload = initApp;
     </script>
 </body>
