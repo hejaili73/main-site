@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- (1) إخفاء المحتوى حتى يتأكد حارس الدخول (يمنع وميض المحتوى المحمي) -->
+    <style>html:not(.auth-ready) body{visibility:hidden}</style>
+
     <!-- الحظر الصارم لمحركات البحث (الأمان والخصوصية) -->
     <meta name="robots" content="noindex, nofollow">
 
@@ -1186,5 +1190,8 @@
         // تشغيل التطبيق (بدون أي تكرار)
         window.onload = initApp;
     </script>
+
+    <!-- (2) حارس الدخول المشترك -->
+    <script type="module" src="auth-guard.js"></script>
 </body>
 </html>
