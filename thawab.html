@@ -84,6 +84,15 @@
         .focus-ring:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(193,154,62,0.25); border-color: #c19a3e; }
         mark.hl { background: #f0dca0; color: #2e2417; border-radius: 4px; padding: 0 3px; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+        /* نقطة المزامنة الخضراء النابضة */
+        .cloud-dot { width: 10px; height: 10px; border-radius: 9999px; background: #22c55e;
+            box-shadow: 0 0 0 0 rgba(34,197,94,0.7); animation: cloudPulse 2s infinite; display: inline-block; }
+        @keyframes cloudPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+            70%  { box-shadow: 0 0 0 7px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+        }
+        @media (prefers-reduced-motion: reduce) { .cloud-dot { animation: none; } }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media (prefers-reduced-motion: reduce) { * { animation: none !important; scroll-behavior: auto !important; } }
     </style>
@@ -94,10 +103,10 @@
     <header class="sticky top-0 z-50 bg-ink border-b-2 border-gold-500/70 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 relative flex items-center justify-center">
             
-            <!-- زر العودة للرئيسية (يمين) -->
-            <a href="index.html" class="absolute right-4 sm:right-6 lg:right-8 inline-flex items-center gap-2 rounded-xl border border-gold-500/30 bg-ink hover:bg-gold-500/10 text-gold-500 px-3 py-2 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40" aria-label="العودة للرئيسية">
+            <!-- Home button (left) -->
+            <a href="index.html" class="absolute left-4 sm:left-6 lg:left-8 inline-flex items-center gap-2 rounded-xl border border-gold-500/30 bg-ink hover:bg-gold-500/10 text-gold-500 px-3 py-2 transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40" aria-label="Home">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span class="hidden sm:inline text-sm font-bold tracking-wide">الرئيسية</span>
+                <span class="hidden sm:inline text-sm font-bold tracking-wide">Home</span>
             </a>
 
             <!-- الاسم في المنتصف -->
@@ -105,17 +114,16 @@
                 <h1 class="font-naskh font-bold text-xl sm:text-2xl text-gold-300 tracking-wide">المتجر الرابح</h1>
             </a>
 
-            <!-- أيقونة إضافة محتوى (يسار) -->
-            <button id="addBtn" type="button" aria-label="إضافة باب أو قسم أو حديث أو آية"
-                class="absolute left-4 sm:left-6 lg:left-8 inline-flex items-center gap-2 rounded-xl bg-gold-500 hover:bg-gold-300 text-ink px-3 py-2 shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40">
+            <!-- Add button (right) -->
+            <button id="addBtn" type="button" aria-label="Add chapter, section, hadith or ayah"
+                class="absolute right-4 sm:right-6 lg:right-8 inline-flex items-center gap-2 rounded-xl bg-gold-500 hover:bg-gold-300 text-ink px-3 py-2 shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-500/40">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M12 4v16m8-8H4"/></svg>
-                <span class="hidden sm:inline text-sm font-bold">إضافة</span>
+                <span class="hidden sm:inline text-sm font-bold">Add</span>
             </button>
 
-            <!-- شارة المزامنة السحابية (مخفية افتراضياً وتظهر بالجانب الأيسر) -->
-            <span id="cloudBadge" class="hidden absolute left-28 sm:left-32 lg:left-36 items-center gap-1.5 text-xs font-bold tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-1.5 rounded-lg border border-emerald-500/20 transition-all">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                <span class="hidden sm:inline">متصل بالسحابة</span>
+            <!-- نقطة المزامنة السحابية (مخفية افتراضياً) -->
+            <span id="cloudBadge" class="hidden absolute left-24 sm:left-28 lg:left-32 top-1/2 -translate-y-1/2 items-center" title="Synced to cloud" aria-label="Synced to cloud">
+                <span class="cloud-dot"></span>
             </span>
 
         </div>
@@ -837,9 +845,28 @@
             currentSectionIndex = 0;
             renderChapters();
             selectedChapterTitleEl.innerText = database[currentChapterIndex].title;
+            renderChapterDeleteBtn();
             renderSections();
             selectSection(0);
         }
+
+        // زر حذف الباب الحالي (يوضع أسفل عنوان الباب)
+        function renderChapterDeleteBtn() {
+            const host = document.getElementById('selectedChapterHeader');
+            if (!host) return;
+            let bar = document.getElementById('chapterDeleteBar');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'chapterDeleteBar';
+                bar.className = 'mt-3';
+                host.appendChild(bar);
+            }
+            bar.innerHTML = `<button type="button" onclick="deleteChapter(${currentChapterIndex})" title="حذف هذا الباب بالكامل" class="inline-flex items-center gap-1.5 text-xs font-bold text-stone-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 px-3 py-1.5 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                حذف الباب بالكامل
+            </button>`;
+        }
+        window.renderChapterDeleteBtn = renderChapterDeleteBtn;
 
         // ===== توليد الأقسام (Tabs) =====
         function renderSections() {
@@ -873,18 +900,22 @@
                     <div class="h-8 w-1.5 bg-gradient-to-b from-brand-400 to-brand-700 rounded-full"></div>
                     <h3 class="text-xl sm:text-2xl font-bold text-stone-800">${section.title}</h3>
                     <span class="text-xs font-bold text-gold-700 bg-gold-100 px-2.5 py-0.5 rounded-full">${section.hadiths.length}</span>
+                    <button type="button" onclick="deleteSection(${currentChapterIndex}, ${currentSectionIndex})" title="حذف هذا القسم" class="ml-auto inline-flex items-center gap-1 text-xs font-bold text-stone-400 hover:text-red-600 hover:bg-red-50 px-2.5 py-1.5 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        حذف القسم
+                    </button>
                 </div>`;
             hadithsContainerEl.insertAdjacentHTML('beforeend', headerHtml);
 
             section.hadiths.forEach((hadith, i) => {
-                const card = createHadithCard(hadith);
+                const card = createHadithCard(hadith, currentChapterIndex, currentSectionIndex, i);
                 card.style.animationDelay = `${Math.min(i * 60, 360)}ms`;
                 hadithsContainerEl.appendChild(card);
             });
         }
 
         // ===== بطاقة الحديث =====
-        function createHadithCard(hadith) {
+        function createHadithCard(hadith, ci, si, hi) {
             const isAyah = hadith.type === 'ayah';
             const card = document.createElement('article');
             card.className = `animate-fadeUp bg-paper-card p-6 md:p-8 rounded-2xl shadow-sm border transition-all relative overflow-hidden ${isAyah ? 'border-gold-100 hover:border-gold-300 border-r-4 border-r-gold-500' : 'border-paper-deep hover:border-gold-300'} hover:shadow-md`;
@@ -907,10 +938,13 @@
                             ${sourceIcon}
                             <span>${highlightSearch(hadith.narrator || (isAyah ? 'القرآن الكريم' : ''))}</span>
                         </div>
+                        <div class="flex items-center gap-1">
                         <button type="button" class="copy-btn inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-brand-700 transition-colors px-2 py-1 rounded-lg hover:bg-brand-50" aria-label="نسخ النص">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             نسخ
                         </button>
+                        ${(ci !== undefined && si !== undefined && hi !== undefined) ? `<button type="button" class="del-btn inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-red-600 transition-colors px-2 py-1 rounded-lg hover:bg-red-50" aria-label="حذف النص" onclick="deleteHadith(${ci}, ${si}, ${hi})"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>حذف</button>` : ''}
+                        </div>
                     </div>
                 </div>`;
 
@@ -1027,6 +1061,40 @@
                 toastEl.classList.remove('flex');
             }, 1800);
         }
+
+        // ===== الحذف (حديث / قسم / باب) مع تأكيد ومزامنة =====
+        function deleteHadith(ci, si, hi) {
+            const hadith = database[ci].sections[si].hadiths[hi];
+            const snippet = (hadith.text || '').slice(0, 40);
+            if (!confirm('حذف هذا النص؟\n\n«' + snippet + '…»')) return;
+            database[ci].sections[si].hadiths.splice(hi, 1);
+            persistAndRefresh();
+            selectChapter(ci); selectSection(si);
+            showToast('تم حذف النص');
+        }
+
+        function deleteSection(ci, si) {
+            const name = database[ci].sections[si].title;
+            const count = database[ci].sections[si].hadiths.length;
+            if (!confirm('حذف القسم «' + name + '» وكل ما فيه (' + count + ')؟')) return;
+            database[ci].sections.splice(si, 1);
+            persistAndRefresh();
+            selectChapter(ci);
+            showToast('تم حذف القسم');
+        }
+
+        function deleteChapter(ci) {
+            const name = database[ci].title;
+            if (!confirm('حذف الباب «' + name + '» بالكامل وكل أقسامه؟')) return;
+            database.splice(ci, 1);
+            if (currentChapterIndex >= database.length) currentChapterIndex = Math.max(0, database.length - 1);
+            persistAndRefresh();
+            selectChapter(currentChapterIndex);
+            showToast('تم حذف الباب');
+        }
+        window.deleteHadith = deleteHadith;
+        window.deleteSection = deleteSection;
+        window.deleteChapter = deleteChapter;
 
         // ===== نافذة الإضافة =====
         let addType = 'hadith';
