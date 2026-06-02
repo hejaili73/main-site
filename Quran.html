@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- حماية وأمان (منع محركات البحث) -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>القرآن الكريم | Hejaili Digital Repository</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233f3a33'/%3E%3Ctext x='16' y='23' font-size='20' font-family='serif' fill='%2310b981' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                        naskh: ['Amiri', 'Tajawal', 'serif'],
+                    },
+                    colors: {
+                        page: '#f4efe6',
+                        surface: { DEFAULT: '#ffffff', alt: '#f9f5ec' },
+                        ink: { DEFAULT: '#3f3a33', strong: '#2c2823', soft: '#6b645a' },
+                        divider: { DEFAULT: '#e7e0d3', strong: '#d8cfbe' },
+                        /* Warm, harmonized accent family — all tuned to sit on the paper background */
+                        clay: { 50:'#f8efe9', 100:'#ecd5c8', 200:'#ddb6a1', 500:'#b9694a', 700:'#8c4a30', 900:'#5f3220' },
+                        gold: { 50:'#f9f1df', 100:'#efdcb0', 200:'#e3c47e', 500:'#c08a2c', 700:'#8a611a', 900:'#5a3f12' },
+                        teal: { 50:'#e9f3f1', 100:'#c3ded9', 200:'#98c5bd', 500:'#2f8d7e', 700:'#1f6457', 900:'#143f37' },
+                        rust: { 50:'#f8ede5', 100:'#eccdb6', 200:'#dba886', 500:'#c0673c', 700:'#8e4726', 900:'#5c2e18' },
+                        sage: { 50:'#eef2e7', 100:'#d4dec0', 200:'#b4c595', 500:'#788f4d', 700:'#566636', 900:'#374324' },
+                        plum: { 50:'#f4ecf0', 100:'#e0c8d6', 200:'#c79fb6', 500:'#945878', 700:'#6c3d56', 900:'#472738' },
+                    },
+                    keyframes: {
+                        fadeUp: { '0%':{opacity:'0',transform:'translateY(12px)'}, '100%':{opacity:'1',transform:'translateY(0)'} },
+                    },
+                    animation: { fadeUp: 'fadeUp .5s ease both' }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d8cfbe; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b645a; }
+
+        .focus-ring:focus-visible {
+            outline: none; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25); border-color: #10b981;
+        }
+
+        .hadith-naskh { line-height: 2.1; }
+
+        @media (prefers-reduced-motion: reduce) { *{animation:none!important;scroll-behavior:auto!important;} }
+    </style>
+</head>
+<body class="bg-page text-ink antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <header class="sticky top-0 z-40 bg-[#fdfbf6]/90 backdrop-blur-md border-b border-divider shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 relative flex items-center justify-between w-full">
+            
+            <!-- Right Side (Index Button) -->
+            <div class="flex items-center gap-3">
+                <button id="backButton" onclick="showMainView()" class="hidden group flex items-center gap-2 px-4 py-2 bg-white text-ink-strong border border-divider rounded-xl hover:bg-page transition-colors focus-ring shadow-sm" title="العودة للفهرس">
+                    <i class="fa-solid fa-arrow-right text-ink-soft group-hover:text-emerald-700 transition-colors"></i>
+                    <span class="font-bold text-sm uppercase tracking-wider">Index</span>
+                </button>
+            </div>
+
+            <!-- Center Title -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-3 pointer-events-none">
+                <h1 class="font-naskh font-bold text-xl sm:text-2xl text-ink-strong tracking-wide">القرآن الكريم</h1>
+            </div>
+
+            <!-- Left Side (Tools + Home Link) -->
+            <div class="flex items-center gap-2">
+                <!-- Backup / Restore -->
+                <button onclick="exportData()" class="w-9 h-9 flex items-center justify-center text-ink-soft hover:text-emerald-700 hover:bg-page rounded-lg transition-colors focus-ring" title="نسخ احتياطي (تنزيل المحتوى)">
+                    <i class="fa-solid fa-cloud-arrow-down text-base"></i>
+                </button>
+                <button onclick="document.getElementById('importFile').click()" class="w-9 h-9 flex items-center justify-center text-ink-soft hover:text-emerald-700 hover:bg-page rounded-lg transition-colors focus-ring" title="استعادة نسخة احتياطية (رفع ملف)">
+                    <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+                </button>
+                <input type="file" id="importFile" accept="application/json,.json" class="hidden" onchange="importData(event)">
+
+                <span class="w-px h-6 bg-divider-strong mx-1 hidden sm:block"></span>
+
+                <a href="index.html" id="logoLink" class="font-bold text-ink-strong hover:text-emerald-700 transition-colors text-sm uppercase tracking-wider flex items-center gap-2" dir="ltr">
+                    <span>Home</span>
+                    <i class="fa-solid fa-house text-base"></i> 
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 py-8 w-full">
+
+        <!-- Main Grid View -->
+        <div id="mainView" class="animate-fadeUp">
+
+            <!-- Toolbar: count + legend -->
+            <div class="mb-6 flex items-center justify-end gap-3">
+                <span id="surahCount" class="text-xs font-bold text-ink-soft bg-surface-alt px-3 py-2 rounded-lg border border-divider"></span>
+                <span class="text-[11px] text-ink-soft flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> تحتوي محتوى
+                </span>
+            </div>
+
+            <div id="surahGridContainer" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2 sm:gap-3 pb-10">
+                <!-- Grid injected via JS -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="detailView" class="hidden animate-fadeUp max-w-5xl mx-auto relative">
+            
+            <!-- Add Content Minimal Button (Top Right in RTL context, physically left side) -->
+            <div class="absolute left-0 top-0 z-10">
+                <button onclick="openEditModal('reason', 'إضافة محتوى للسورة')" class="w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md transition-all flex items-center justify-center text-lg focus-ring" title="إضافة محتوى">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Surah Header Info -->
+            <div class="mb-8 text-center relative mt-2">
+                <h2 class="text-4xl md:text-5xl font-extrabold font-naskh text-ink-strong tracking-tight mb-4" id="detailSurahName">
+                    سورة
+                </h2>
+                
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
+                    <span class="text-xs font-bold text-ink-soft bg-white px-3 py-1.5 rounded-lg border border-divider shadow-sm">
+                        ترتيبها: <span id="detailSurahNumber" class="text-ink-strong"></span>
+                    </span>
+                    <span class="text-xs font-bold text-ink-strong bg-white px-3 py-1.5 rounded-lg border border-divider shadow-sm flex items-center gap-1">
+                        مكان النزول: <span id="detailSurahType" class="text-emerald-700">مكية</span>
+                    </span>
+                    
+                    <!-- Quran Recitation Text Button -->
+                    <a id="detailRecitationLink" href="#" target="_blank" rel="noopener" class="px-3 h-7 flex items-center justify-center bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-md transition-colors shadow-sm focus-ring font-bold text-xs" title="قراءة واستماع للسورة">
+                        تلاوة
+                    </a>
+
+                    <!-- Telegram Icon (Small) -->
+                    <a id="detailTelegramLink" href="#" target="_blank" rel="noopener" class="w-7 h-7 flex items-center justify-center bg-white text-ink-soft hover:text-emerald-700 hover:bg-emerald-50 border border-divider rounded-md transition-colors shadow-sm focus-ring" title="قناة التليجرام">
+                        <i class="fa-brands fa-telegram text-base"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-10">
+                
+                <!-- 1. Sabab Nuzul (Full Width) -->
+                <div class="bg-clay-50/70 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-clay-100 shadow-sm md:col-span-2">
+                    <h3 class="text-sm font-bold text-clay-900 flex items-center gap-2 mb-4 border-b border-clay-200/60 pb-2">
+                        <i class="fa-solid fa-book-open-reader text-clay-500"></i> سبب النزول
+                    </h3>
+                    <div id="detailReason" class="hadith-naskh text-sm md:text-base text-ink-strong"></div>
+                </div>
+
+                <!-- 2. Fada'il (Full Width) -->
+                <div class="bg-emerald-50/60 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-emerald-100 shadow-sm md:col-span-2">
+                    <h3 class="text-sm font-bold text-emerald-900 flex items-center gap-2 mb-4 border-b border-emerald-200/50 pb-2">
+                        <i class="fa-solid fa-star text-emerald-500"></i> فضائل السورة
+                    </h3>
+                    <div id="detailVirtues" class="hadith-naskh text-sm md:text-base text-ink-strong"></div>
+                </div>
+
+                <!-- 3. Fawa'id (Full Width) -->
+                <div class="bg-gold-50/70 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-gold-100 shadow-sm md:col-span-2">
+                    <h3 class="text-sm font-bold text-gold-900 flex items-center gap-2 mb-4 border-b border-gold-200/60 pb-2">
+                        <i class="fa-solid fa-lightbulb text-gold-500"></i> فوائد من السورة
+                    </h3>
+                    <div id="detailBenefits" class="hadith-naskh text-sm md:text-base text-ink-strong"></div>
+                </div>
+
+                <!-- 4. Thematic Verses (Checklist & Content) (Full Width) -->
+                <div class="bg-teal-50/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-teal-100 shadow-sm md:col-span-2">
+                    <div class="flex items-center justify-center mb-5 border-b border-teal-200/60 pb-3">
+                        <h3 class="text-base md:text-lg font-bold text-teal-900 flex items-center gap-2">
+                            <i class="fa-solid fa-gem text-teal-500"></i> جواهر السورة
+                        </h3>
+                    </div>
+                    
+                    <!-- Checklist / Stats Bar -->
+                    <div id="detailVerseStats" class="w-full"></div>
+                    
+                    <!-- Verses Content List -->
+                    <div id="detailVersesContent" class="w-full mt-2"></div>
+                </div>
+
+                <!-- 5. Youtube (Half Width) -->
+                <div class="bg-amber-50/60 backdrop-blur-sm p-6 rounded-2xl border border-amber-100 shadow-sm col-span-1">
+                    <h3 class="text-sm font-bold text-amber-900 flex items-center gap-2 mb-4 border-b border-amber-200/50 pb-2">
+                        <i class="fa-brands fa-youtube text-amber-500"></i> مقاطع اليوتيوب
+                    </h3>
+                    <div id="detailYoutube"></div>
+                </div>
+
+                <!-- 6. Useful Links (Half Width) -->
+                <div class="bg-stone-50/80 backdrop-blur-sm p-6 rounded-2xl border border-stone-200 shadow-sm col-span-1">
+                    <h3 class="text-sm font-bold text-stone-700 flex items-center gap-2 mb-4 border-b border-stone-200/60 pb-2">
+                        <i class="fa-solid fa-globe text-stone-500"></i> روابط مفيدة
+                    </h3>
+                    <div id="detailLinks"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Unified Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-ink-strong/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-surface border border-divider rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            
+            <div class="bg-surface-alt px-5 py-4 border-b border-divider flex justify-between items-center shrink-0">
+                <h3 class="font-naskh font-bold text-lg text-ink-strong" id="modalTitle">إدارة محتوى السورة</h3>
+                <button onclick="closeEditModal()" class="text-ink-soft hover:text-rose-500 transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <!-- Category Selection -->
+            <div class="p-4 border-b border-divider bg-white shrink-0">
+                <label class="block text-xs font-bold text-ink-soft mb-2">اختر القسم المراد الإضافة إليه:</label>
+                <div class="relative">
+                    <select id="modalCategorySelect" onchange="switchModalCategory()" class="w-full bg-page border border-divider text-ink-strong rounded-xl px-4 py-2.5 appearance-none focus-ring text-sm font-bold cursor-pointer">
+                        <option value="reason">سبب النزول</option>
+                        <option value="virtues">فضائل السورة</option>
+                        <option value="benefits">فوائد من السورة</option>
+                        <option value="verses">جواهر السورة</option>
+                        <option value="youtube">مقاطع اليوتيوب</option>
+                        <option value="links">روابط مفيدة</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down absolute left-4 top-1/2 transform -translate-y-1/2 text-ink-soft text-xs pointer-events-none"></i>
+                </div>
+            </div>
+
+            <!-- Existing Items List -->
+            <div class="p-5 overflow-y-auto flex-grow bg-page/30">
+                <div id="modalExistingItems" class="space-y-3">
+                    <!-- Items injected here -->
+                </div>
+            </div>
+            
+            <!-- Add New Item Section -->
+            <div class="bg-surface px-5 py-4 border-t border-divider shrink-0">
+                <label class="block text-xs font-bold text-ink-soft mb-2">إضافة تسلسل جديد:</label>
+                
+                <div class="flex flex-col gap-3">
+                    <!-- Specific Tag dropdown for Verses -->
+                    <div id="modalVerseTagContainer" class="hidden relative">
+                        <select id="modalVerseTag" class="w-full bg-teal-50 border border-teal-200 text-teal-900 rounded-xl px-4 py-2.5 appearance-none focus-ring text-sm font-bold cursor-pointer">
+                            <option value="دعاء">🤲 آية: دعاء</option>
+                            <option value="حوار">💬 آية: حوار</option>
+                            <option value="أسماء الله الحسنى">✨ آية: أسماء الله الحسنى</option>
+                            <option value="قصة">📖 آية: قصة</option>
+                            <option value="مثل">💡 آية: مثل</option>
+                            <option value="نداء">📢 آية: نداء</option>
+                            <option value="قاعدة قرآنية">📌 آية: قاعدة قرآنية</option>
+                            <option value="مشاهد القيامة">⏳ آية: مشاهد القيامة</option>
+                            <option value="أحكام وتوجيهات">⚖️ آية: أحكام وتوجيهات</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute left-4 top-1/2 transform -translate-y-1/2 text-teal-500 text-xs pointer-events-none"></i>
+                    </div>
+
+                    <!-- Texts Inputs -->
+                    <textarea id="modalTextInput" rows="2" class="w-full bg-page border border-divider rounded-xl p-3 focus-ring text-ink-strong text-sm font-naskh placeholder-ink-soft resize-none" placeholder="اكتب التفاصيل هنا..."></textarea>
+                    
+                    <!-- Media Links Inputs -->
+                    <div id="modalLinkInputs" class="hidden flex-col gap-3">
+                        <input type="text" id="modalLinkTitle" class="w-full bg-page border border-divider rounded-xl p-3 focus-ring text-ink-strong text-sm" placeholder="عنوان المقطع أو الرابط...">
+                        <input type="url" id="modalLinkUrl" class="w-full bg-page border border-divider rounded-xl p-3 focus-ring text-ink-strong text-sm text-left" dir="ltr" placeholder="https://...">
+                    </div>
+                    
+                    <button id="modalAddBtn" onclick="addNewItem()" class="self-end sm:w-36 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm text-sm shrink-0 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> إضافة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const madaniSurahs = [2, 3, 4, 5, 8, 9, 13, 22, 24, 33, 47, 48, 49, 55, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 76, 98, 99, 110];
+
+        const rawData = [
+            { id: 1, name: "الفاتحة", link: "https://t.me/+ReXkaZty3fRmNjk8" },
+            { id: 2, name: "البقرة", link: "https://t.me/+pBWQVtvGm6ZiOTVk" },
+            { id: 3, name: "آل عمران", link: "https://t.me/+ao1uq-A2u9U3ZDZk" },
+            { id: 4, name: "النساء", link: "https://t.me/+T8O79MMSCAwwMTM0" },
+            { id: 5, name: "المائدة", link: "https://t.me/+_dTNW1pAEXFmZTk0" },
+            { id: 6, name: "الأنعام", link: "https://t.me/+UV-D6xJ5T_80NmY0" },
+            { id: 7, name: "الأعراف", link: "https://t.me/+DVH-CrF7W8RmOGY8" },
+            { id: 8, name: "الأنفال", link: "https://t.me/+8a5O_2_4ofk0N2I0" },
+            { id: 9, name: "التوبة", link: "https://t.me/+LXCVBYExOqIyN2Y0" },
+            { id: 10, name: "يونس", link: "https://t.me/+ibyE-Y5jtng3MTc0" },
+            { id: 11, name: "هود", link: "https://t.me/+64WGxUIhnzw5ZGE0" },
+            { id: 12, name: "يوسف", link: "https://t.me/+vAUKexY_fWBlNWM0" },
+            { id: 13, name: "الرعد", link: "https://t.me/+39nwtiXrrNczMGE0" },
+            { id: 14, name: "إبراهيم", link: "https://t.me/+JDMyHff5ITY2MzJk" },
+            { id: 15, name: "الحجر", link: "https://t.me/+sDMPx_V1PSUzNmY0" },
+            { id: 16, name: "النحل", link: "https://t.me/+EwAiGZFX2n42YTFk" },
+            { id: 17, name: "الإسراء", link: "https://t.me/+2ZgBar5T2JVlYjA0" },
+            { id: 18, name: "الكهف", link: "https://t.me/+_X7E36KYtENkZWNk" },
+            { id: 19, name: "مريم", link: "https://t.me/+PYq38caA0tNiYWU0" },
+            { id: 20, name: "طه", link: "https://t.me/+LxFZDeZrROZlNzA0" },
+            { id: 21, name: "الأنبياء", link: "https://t.me/+hX8z1rZg73NlMzhk" },
+            { id: 22, name: "الحج", link: "https://t.me/+1XUXzerVSv01OTZk" },
+            { id: 23, name: "المؤمنون", link: "https://t.me/+0N7L9YPXHv5hZWNk" },
+            { id: 24, name: "النور", link: "https://t.me/+aOhT-YuvfLFjNDFk" },
+            { id: 25, name: "الفرقان", link: "https://t.me/+7MEVPsKclzA0OWJk" },
+            { id: 26, name: "الشعراء", link: "https://t.me/+bYC5oJg5-uk4NWI0" },
+            { id: 27, name: "النمل", link: "https://t.me/+d2yZcquOR7QxMWJk" },
+            { id: 28, name: "القصص", link: "https://t.me/+frutw91IIagxYzY0" },
+            { id: 29, name: "العنكبوت", link: "https://t.me/+ckSZzDN8Cm81N2I0" },
+            { id: 30, name: "الروم", link: "https://t.me/+Rc-MLRnKhUxiNjk0" },
+            { id: 31, name: "لقمان", link: "https://t.me/+i2F0J1hwes5hOTU0" },
+            { id: 32, name: "السجدة", link: "https://t.me/+pHME1uVcJQplZThk" },
+            { id: 33, name: "الأحزاب", link: "https://t.me/+RC3xSCBHsH8wODg8" },
+            { id: 34, name: "سبأ", link: "https://t.me/+Ifuouf-m-yA1ZjFk" },
+            { id: 35, name: "فاطر", link: "https://t.me/+DJAqwmHC341iODc0" },
+            { id: 36, name: "يس", link: "https://t.me/+k0T-b2oJ5EY4MWVk" },
+            { id: 37, name: "الصافات", link: "https://t.me/+-_9DWRUBcUMzYzJk" },
+            { id: 38, name: "ص", link: "https://t.me/+kiUA2x95amwxOTQ0" },
+            { id: 39, name: "الزمر", link: "https://t.me/+J6Dh9R0FMRo0ZmZk" },
+            { id: 40, name: "غافر", link: "https://t.me/+tKBLgQTrlI5mOGU0" },
+            { id: 41, name: "فصلت", link: "https://t.me/+kK2xMckNpr5kNTU0" },
+            { id: 42, name: "الشورى", link: "https://t.me/+wgq1TT2sgk83MDRk" },
+            { id: 43, name: "الزخرف", link: "https://t.me/+e8qBCO5iopRjY2U8" },
+            { id: 44, name: "الدخان", link: "https://t.me/+yNpPmO8p7o4wNjk0" },
+            { id: 45, name: "الجاثية", link: "https://t.me/+CKCogvEHxlthYjhk" },
+            { id: 46, name: "الأحقاف", link: "https://t.me/+ahIfFrhwx1M5MmNk" },
+            { id: 47, name: "محمد", link: "https://t.me/+7P4GfoRtAINiNDI0" },
+            { id: 48, name: "الفتح", link: "https://t.me/+sWKYpg6HGhEzMzJk" },
+            { id: 49, name: "الحجرات", link: "https://t.me/+rNs6_RVygC1jMGI0" },
+            { id: 50, name: "ق", link: "https://t.me/+jArg9fMDflg5YjE0" },
+            { id: 51, name: "الذاريات", link: "https://t.me/+gF6cP_Oe2H8zZjA8" },
+            { id: 52, name: "الطور", link: "https://t.me/+oZZsfCyTaW9lMzI0" },
+            { id: 53, name: "النجم", link: "https://t.me/+HF2nylj3hRhjZjk0" },
+            { id: 54, name: "القمر", link: "https://t.me/+KNifDJ6jYGA0MDM0" },
+            { id: 55, name: "الرحمن", link: "https://t.me/+Rdyqg7_x1Mg4N2Fk" },
+            { id: 56, name: "الواقعة", link: "https://t.me/+GmXOX4RDmDs3NDM0" },
+            { id: 57, name: "الحديد", link: "https://t.me/+_Du0aP-u1nY0Yjlk" },
+            { id: 58, name: "المجادلة", link: "https://t.me/+31q3dNgtKUUyNThk" },
+            { id: 59, name: "الحشر", link: "https://t.me/+NwbjO5Plh6tmYzk0" },
+            { id: 60, name: "الممتحنة", link: "https://t.me/+q6umB-79ZkdjY2Q0" },
+            { id: 61, name: "الصف", link: "https://t.me/+cpP8-9oYHPszNGQ0" },
+            { id: 62, name: "الجمعة", link: "https://t.me/+inFYhWWWt1k0Njlk" },
+            { id: 63, name: "المنافقون", link: "https://t.me/+tkY5Tn_hDoFmYmZk" },
+            { id: 64, name: "التغابن", link: "https://t.me/+_Pc52pzCMfQxYWM8" },
+            { id: 65, name: "الطلاق", link: "https://t.me/+dqHnK1Z8aOBlMGQ0" },
+            { id: 66, name: "التحريم", link: "https://t.me/+bLffJPIhl3o1MWVk" },
+            { id: 67, name: "الملك", link: "https://t.me/+3FJKRzrpt_dhZTY0" },
+            { id: 68, name: "القلم", link: "https://t.me/+hfuLycW6hJJjNGZk" },
+            { id: 69, name: "الحاقة", link: "https://t.me/+kFdpOgCImJUzMTA0" },
+            { id: 70, name: "المعارج", link: "https://t.me/+KUmyD-quiCkzNjZk" },
+            { id: 71, name: "نوح", link: "https://t.me/+hH3P6Z9gWbkyOGE0" },
+            { id: 72, name: "الجن", link: "https://t.me/+QUOmbnHxjohhNTE0" },
+            { id: 73, name: "المزمل", link: "https://t.me/+1vuEgGBSsT1lMzY0" },
+            { id: 74, name: "المدثر", link: "https://t.me/+hDtTWuWApL5kZDA0" },
+            { id: 75, name: "القيامة", link: "https://t.me/+lG0EEZ6WoiA0ODA0" },
+            { id: 76, name: "الإنسان", link: "https://t.me/+oHDwS_8Gd6NhOGY0" },
+            { id: 77, name: "المرسلات", link: "https://t.me/+C4XGqB1GQ9AzZjA0" },
+            { id: 78, name: "النبأ", link: "https://t.me/+dWKDvSBv0n81MTQ8" },
+            { id: 79, name: "النازعات", link: "https://t.me/+M1OUTjfbgHkwNzNk" },
+            { id: 80, name: "عبس", link: "https://t.me/+ZcxrnjlygmRjODhk" },
+            { id: 81, name: "التكوير", link: "https://t.me/+nsPoA9zyoa0yMmVk" },
+            { id: 82, name: "الانفطار", link: "https://t.me/+UXBMI91rTIJmZDFk" },
+            { id: 83, name: "المطففين", link: "https://t.me/+thTAIGFyQwoxZjM0" },
+            { id: 84, name: "الانشقاق", link: "https://t.me/+Qi0OVGo87FY4MjBk" },
+            { id: 85, name: "البروج", link: "https://t.me/+GrLrXFwetU9kZDM0" },
+            { id: 86, name: "الطارق", link: "https://t.me/+dwQbTcVSMZ4zNjI8" },
+            { id: 87, name: "الأعلى", link: "https://t.me/+2geVDEVOFphjZDlk" },
+            { id: 88, name: "الغاشية", link: "https://t.me/+y43Exm0XALo5ZDVk" },
+            { id: 89, name: "الفجر", link: "https://t.me/+Ess-L0qUYmpjYjJk" },
+            { id: 90, name: "البلد", link: "https://t.me/+MtQ_AMnZVSsxZmE0" },
+            { id: 91, name: "الشمس", link: "https://t.me/+Oma6eYOBIjNmOTNk" },
+            { id: 92, name: "الليل", link: "https://t.me/+h9KLfZHPC_gzMTY0" },
+            { id: 93, name: "الضحى", link: "https://t.me/+DPN14v5Z1m4xY2E0" },
+            { id: 94, name: "الشرح", link: "https://t.me/+RIxUy4Ji23BkMWNk" },
+            { id: 95, name: "التين", link: "https://t.me/+-eHqTE1j9QYwYTBk" },
+            { id: 96, name: "العلق", link: "https://t.me/+KHaJYOHp5QlkNWM8" },
+            { id: 97, name: "القدر", link: "https://t.me/+t0F1WsnAHQs1ZjZk" },
+            { id: 98, name: "البينة", link: "https://t.me/+WYSEmqggAbUzM2Y0" },
+            { id: 99, name: "الزلزلة", link: "https://t.me/+T5YNvCxpQ3FjNWVk" },
+            { id: 100, name: "العاديات", link: "https://t.me/+NZwcH8ynUyxlMDU0" },
+            { id: 101, name: "القارعة", link: "https://t.me/+eBSuyukKGcA2NTM0" },
+            { id: 102, name: "التكاثر", link: "https://t.me/+-K6aJLhIOZtkYWY0" },
+            { id: 103, name: "العصر", link: "https://t.me/+YTiHEpBKYw9jMzk0" },
+            { id: 104, name: "الهمزة", link: "https://t.me/+XRjyBMhioWkxNjE8" },
+            { id: 105, name: "الفيل", link: "https://t.me/+UdmClPFj_wQ1NzZk" },
+            { id: 106, name: "قريش", link: "https://t.me/+NWNpitlaazwzYWU0" },
+            { id: 107, name: "الماعون", link: "https://t.me/+0itiy4vXCZQzNGM0" },
+            { id: 108, name: "الكوثر", link: "https://t.me/+ib811oilb_IyY2Zk" },
+            { id: 109, name: "الكافرون", link: "https://t.me/+ksi34UBFR39kYjE0" },
+            { id: 110, name: "النصر", link: "https://t.me/+zDSC9Bcxz1BjZGM0" },
+            { id: 111, name: "المسد", link: "https://t.me/+azZkp42QB6E2MGQ0" },
+            { id: 112, name: "الإخلاص", link: "https://t.me/+eYqZgJwSiHkwZWM0" },
+            { id: 113, name: "الفلق", link: "https://t.me/+PhUJGrQk26I0ZDBk" },
+            { id: 114, name: "الناس", link: "https://t.me/+Ob04eV7lhRMwMGNk" }
+        ];
+
+        const quranData = rawData.map(surah => ({
+            ...surah,
+            type: madaniSurahs.includes(surah.id) ? 'مدنية' : 'مكية'
+        }));
+
+        // Storage setup (version 4 supports advanced data structures)
+        const STORAGE_KEY = 'hejaili_quran_data_v4'; 
+        let localQuranData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        
+        let currentEditingSurahId = null;
+        let editingItemIndex = null;
+
+        // Verse Tags configuration
+        const tagConfig = {
+            'دعاء': { icon: 'fa-hands-praying', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200' },
+            'حوار': { icon: 'fa-comments', color: 'text-clay-700', bg: 'bg-clay-50', border: 'border-clay-200' },
+            'أسماء الله الحسنى': { icon: 'fa-crown', color: 'text-gold-700', bg: 'bg-gold-50', border: 'border-gold-200' },
+            'قصة': { icon: 'fa-book-open', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' },
+            'مثل': { icon: 'fa-lightbulb', color: 'text-teal-700', bg: 'bg-teal-50', border: 'border-teal-200' },
+            'نداء': { icon: 'fa-bullhorn', color: 'text-rust-700', bg: 'bg-rust-50', border: 'border-rust-200' },
+            'قاعدة قرآنية': { icon: 'fa-thumbtack', color: 'text-sage-700', bg: 'bg-sage-50', border: 'border-sage-200' },
+            'مشاهد القيامة': { icon: 'fa-hourglass-half', color: 'text-stone-700', bg: 'bg-stone-50', border: 'border-stone-300' },
+            'أحكام وتوجيهات': { icon: 'fa-scale-balanced', color: 'text-plum-700', bg: 'bg-plum-50', border: 'border-plum-200' }
+        };
+
+        // Does a surah have any saved content?
+        function surahHasContent(id) {
+            const d = localQuranData[id];
+            if (!d) return false;
+            return ['reason','virtues','benefits','verses','youtube','links']
+                .some(k => Array.isArray(d[k]) && d[k].length > 0);
+        }
+
+        function renderSurahs() {
+            const container = document.getElementById('surahGridContainer');
+            const countEl = document.getElementById('surahCount');
+
+            let html = '';
+            quranData.forEach(surah => {
+                const filled = surahHasContent(surah.id);
+                html += `
+                    <button type="button" onclick="showDetail(${surah.id})" aria-label="سورة ${surah.name}" class="relative bg-white border border-divider rounded-xl hover:border-emerald-300 hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col items-center justify-center p-2.5 min-h-[4.5rem] group focus-ring">
+                        ${filled ? `<span class="absolute top-1.5 left-1.5 w-2 h-2 rounded-full bg-emerald-500 shadow-sm" title="تحتوي على محتوى"></span>` : ``}
+                        <span class="text-[10px] text-ink-soft font-bold mb-1 opacity-70 group-hover:text-emerald-600 transition-colors leading-none">${surah.id}</span>
+                        <span class="font-naskh text-base md:text-lg font-bold text-ink-strong group-hover:text-emerald-700 transition-colors leading-none whitespace-nowrap pt-1">${surah.name}</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            const filledCount = quranData.filter(s => surahHasContent(s.id)).length;
+            if (countEl) {
+                countEl.innerHTML = `${quranData.length} سورة · <span class="text-emerald-700">${filledCount} بمحتوى</span>`;
+            }
+        }
+
+        function formatList(arr) {
+            if(!arr || !Array.isArray(arr) || arr.length === 0) {
+                return `<span class="text-ink-soft italic opacity-70 font-sans text-[11px]">« لا يوجد محتوى مضاف حتى الآن »</span>`;
+            }
+            let html = '<ul class="space-y-4">';
+            arr.forEach((item, index) => {
+                html += `<li class="flex items-start gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md bg-white border border-divider text-ink-soft font-bold text-[11px] mt-0.5 shadow-sm">${index + 1}</span>
+                            <div class="flex-1 text-sm md:text-base">${item.replace(/\n/g, '<br>')}</div>
+                         </li>`;
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        function formatLinks(arr, type) {
+            if(!arr || !Array.isArray(arr) || arr.length === 0) {
+                return `<div class="w-full flex items-center justify-center gap-3 bg-white text-ink-soft border border-divider px-4 py-2.5 rounded-xl font-bold italic text-[11px] shadow-sm"><i class="fa-solid fa-link text-base opacity-50"></i> لا يوجد بيانات</div>`;
+            }
+            
+            const isYt = type === 'youtube';
+            const colorClass = isYt ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 border-amber-200' : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-200';
+            const numClass = isYt ? 'bg-amber-200/60 text-amber-900' : 'bg-stone-100 text-stone-500';
+            const iconClass = isYt ? 'fa-youtube' : 'fa-globe';
+
+            let html = '<div class="space-y-2">';
+            arr.forEach((item, index) => {
+                const title = item.title || (isYt ? 'مقطع يوتيوب' : 'رابط مفيد');
+                html += `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-between gap-3 border px-4 py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm focus-ring group ${colorClass}">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <span class="w-5 h-5 flex-shrink-0 flex items-center justify-center rounded-md text-[10px] ${numClass}">${index + 1}</span>
+                                <i class="fa-brands ${iconClass} text-lg flex-shrink-0"></i> 
+                                <span class="truncate block w-full text-right" title="${title}">${title}</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square opacity-50 group-hover:opacity-100 transition-opacity flex-shrink-0"></i>
+                         </a>`;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function formatVerses(arr) {
+            const statsContainer = document.getElementById('detailVerseStats');
+            const contentContainer = document.getElementById('detailVersesContent');
+            
+            // Group by tag
+            const grouped = {};
+            if(arr && Array.isArray(arr)) {
+                arr.forEach(item => {
+                    if(!grouped[item.tag]) grouped[item.tag] = [];
+                    grouped[item.tag].push(item.text);
+                });
+            }
+
+            const categories = ['دعاء', 'حوار', 'أسماء الله الحسنى', 'قصة', 'مثل', 'نداء', 'قاعدة قرآنية', 'مشاهد القيامة', 'أحكام وتوجيهات'];
+            
+            // Interactive Stats Bar
+            let statsHtml = '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">';
+            categories.forEach(tag => {
+                const conf = tagConfig[tag];
+                const count = grouped[tag] ? grouped[tag].length : 0;
+                const opacityClass = count > 0 ? 'opacity-100' : 'opacity-60 grayscale hover:grayscale-0 hover:opacity-100';
+                
+                statsHtml += `
+                    <button onclick="openEditModal('verses', 'إضافة آية', '${tag}')" class="flex items-center justify-between p-3 rounded-xl border ${conf.border} ${conf.bg} hover:shadow-md transition-all group ${opacityClass} text-right focus-ring">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 flex-shrink-0 rounded-lg bg-white flex items-center justify-center shadow-sm ${conf.color}"><i class="fa-solid ${conf.icon}"></i></div>
+                            <span class="font-bold text-xs sm:text-sm text-ink-strong leading-tight">${tag}</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <span class="font-black text-lg ${conf.color}">${count}</span>
+                            <i class="fa-solid fa-plus text-[10px] text-ink-soft opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-md border border-divider"></i>
+                        </div>
+                    </button>
+                `;
+            });
+            statsHtml += '</div>';
+            statsContainer.innerHTML = statsHtml;
+
+            // Content List
+            if(!arr || arr.length === 0) {
+                contentContainer.innerHTML = '';
+                return;
+            }
+
+            let contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-teal-200/60 w-full">';
+            for (let tag in grouped) {
+                const conf = tagConfig[tag];
+                contentHtml += `
+                    <div class="bg-white border ${conf.border} rounded-xl p-5 shadow-sm flex flex-col h-full">
+                        <h4 class="text-sm font-bold ${conf.color} flex items-center gap-2 mb-3 border-b ${conf.border} pb-2"><i class="fa-solid ${conf.icon}"></i> آيات: ${tag}</h4>
+                        <ul class="space-y-3 flex-grow">
+                            ${grouped[tag].map((text, i) => `
+                                <li class="flex items-start gap-3">
+                                    <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md ${conf.bg} ${conf.color} font-bold text-[11px] mt-0.5">${i+1}</span>
+                                    <p class="hadith-naskh text-sm md:text-base leading-relaxed text-ink-strong">${text.replace(/\n/g, '<br>')}</p>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            contentHtml += '</div>';
+            contentContainer.innerHTML = contentHtml;
+        }
+
+        function showDetail(surahId) {
+            currentEditingSurahId = surahId;
+            const surah = quranData.find(s => s.id === surahId);
+            if(!surah) return;
+
+            document.getElementById('detailSurahNumber').innerText = surah.id;
+            document.getElementById('detailSurahName').innerText = "سورة " + surah.name;
+            const typeEl = document.getElementById('detailSurahType');
+            typeEl.innerText = surah.type;
+            typeEl.className = surah.type === 'مدنية' ? 'text-clay-700' : 'text-emerald-700';
+            
+            // Generate Links
+            document.getElementById('detailTelegramLink').href = surah.link;
+            document.getElementById('detailRecitationLink').href = "https://quran.com/ar/" + surah.id;
+
+            const data = localQuranData[surahId] || {};
+            
+            document.getElementById('detailReason').innerHTML = formatList(data.reason);
+            document.getElementById('detailVirtues').innerHTML = formatList(data.virtues);
+            document.getElementById('detailBenefits').innerHTML = formatList(data.benefits);
+            
+            document.getElementById('detailYoutube').innerHTML = formatLinks(data.youtube, 'youtube');
+            document.getElementById('detailLinks').innerHTML = formatLinks(data.links, 'links');
+            formatVerses(data.verses);
+
+            document.getElementById('mainView').classList.add('hidden');
+            document.getElementById('detailView').classList.remove('hidden');
+            document.getElementById('logoLink').classList.add('hidden');
+            document.getElementById('backButton').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showMainView() {
+            document.getElementById('detailView').classList.add('hidden');
+            document.getElementById('mainView').classList.remove('hidden');
+            document.getElementById('backButton').classList.add('hidden');
+            document.getElementById('logoLink').classList.remove('hidden');
+            renderSurahs();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openEditModal(defaultCat = 'reason', title = 'إدارة المحتوى', defaultTag = null) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalCategorySelect').value = defaultCat;
+            
+            switchModalCategory();
+            
+            if(defaultCat === 'verses' && defaultTag) {
+                document.getElementById('modalVerseTag').value = defaultTag;
+            }
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function switchModalCategory() {
+            const cat = document.getElementById('modalCategorySelect').value;
+            const isMedia = (cat === 'youtube' || cat === 'links');
+            const isVerses = (cat === 'verses');
+
+            editingItemIndex = null;
+            updateAddButtonLabel();
+            document.getElementById('modalTextInput').value = '';
+            document.getElementById('modalLinkTitle').value = '';
+            document.getElementById('modalLinkUrl').value = '';
+
+            if (isMedia) {
+                document.getElementById('modalTextInput').classList.add('hidden');
+                document.getElementById('modalLinkInputs').classList.remove('hidden');
+                document.getElementById('modalLinkInputs').classList.add('flex');
+            } else {
+                document.getElementById('modalTextInput').classList.remove('hidden');
+                document.getElementById('modalLinkInputs').classList.add('hidden');
+                document.getElementById('modalLinkInputs').classList.remove('flex');
+            }
+
+            if (isVerses) {
+                document.getElementById('modalVerseTagContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('modalVerseTagContainer').classList.add('hidden');
+            }
+            
+            renderModalItems();
+            
+            setTimeout(() => {
+                if (isMedia) document.getElementById('modalLinkTitle').focus();
+                else document.getElementById('modalTextInput').focus();
+            }, 50);
+        }
+
+        function renderModalItems() {
+            const cat = document.getElementById('modalCategorySelect').value;
+            const container = document.getElementById('modalExistingItems');
+            const data = localQuranData[currentEditingSurahId] || {};
+            let arr = data[cat] || [];
+
+            if (arr.length === 0) {
+                container.innerHTML = '<p class="text-[11px] text-ink-soft italic text-center py-4 bg-white rounded-xl border border-divider">لا توجد مدخلات في هذا القسم.</p>';
+                return;
+            }
+
+            let html = '';
+            arr.forEach((item, index) => {
+                let displayItem = '';
+                if (cat === 'youtube' || cat === 'links') {
+                    displayItem = `<div class="flex flex-col"><span class="font-bold text-emerald-700 text-sm">${item.title}</span><a href="${item.url}" target="_blank" dir="ltr" class="text-ink-soft hover:underline text-[11px] truncate mt-1 max-w-[250px]">${item.url}</a></div>`;
+                } else if (cat === 'verses') {
+                    displayItem = `<div class="flex flex-col"><span class="font-bold text-teal-700 text-[10px] bg-teal-50 px-2 py-0.5 rounded border border-teal-100 w-fit mb-1">${item.tag}</span><span class="hadith-naskh text-sm leading-relaxed">${item.text.replace(/\n/g, '<br>')}</span></div>`;
+                } else {
+                    displayItem = item.replace(/\n/g, '<br>');
+                }
+                    
+                html += `
+                    <div class="flex items-start gap-3 bg-white p-3 rounded-xl border border-divider shadow-sm group">
+                        <span class="flex-shrink-0 bg-surface-alt text-ink-soft border border-divider w-6 h-6 flex items-center justify-center rounded-md text-[11px] font-bold mt-0.5">${index + 1}</span>
+                        <div class="flex-1 text-sm text-ink-strong overflow-hidden">${displayItem}</div>
+                        <button onclick="startEditItem(${index})" class="text-ink-soft hover:text-emerald-700 hover:bg-emerald-50 w-7 h-7 flex items-center justify-center rounded transition-colors shrink-0" title="تعديل">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <button onclick="deleteModalItem(${index})" class="text-rose-400 hover:text-rose-600 hover:bg-rose-50 w-7 h-7 flex items-center justify-center rounded transition-colors shrink-0" title="حذف">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function persist() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(localQuranData));
+                return true;
+            } catch (e) {
+                alert('تعذّر الحفظ في المتصفح. قد تكون مساحة التخزين ممتلئة أو معطّلة. ننصح بأخذ نسخة احتياطية.');
+                return false;
+            }
+        }
+
+        function updateAddButtonLabel() {
+            const btn = document.getElementById('modalAddBtn');
+            if (!btn) return;
+            if (editingItemIndex !== null) {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> حفظ التعديل';
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> إضافة';
+            }
+        }
+
+        function startEditItem(index) {
+            const cat = document.getElementById('modalCategorySelect').value;
+            const item = (localQuranData[currentEditingSurahId]?.[cat] || [])[index];
+            if (item === undefined) return;
+
+            if (cat === 'youtube' || cat === 'links') {
+                document.getElementById('modalLinkTitle').value = item.title || '';
+                document.getElementById('modalLinkUrl').value = item.url || '';
+                setTimeout(() => document.getElementById('modalLinkTitle').focus(), 50);
+            } else if (cat === 'verses') {
+                document.getElementById('modalTextInput').value = item.text || '';
+                document.getElementById('modalVerseTag').value = item.tag || 'دعاء';
+                setTimeout(() => document.getElementById('modalTextInput').focus(), 50);
+            } else {
+                document.getElementById('modalTextInput').value = item;
+                setTimeout(() => document.getElementById('modalTextInput').focus(), 50);
+            }
+            editingItemIndex = index;
+            updateAddButtonLabel();
+        }
+
+        function addNewItem() {
+            const cat = document.getElementById('modalCategorySelect').value;
+            let val;
+            
+            if (cat === 'youtube' || cat === 'links') {
+                const titleVal = document.getElementById('modalLinkTitle').value.trim();
+                const urlVal = document.getElementById('modalLinkUrl').value.trim();
+                if (!urlVal) return;
+                val = { title: titleVal || (cat==='youtube'?'مقطع يوتيوب':'رابط'), url: urlVal };
+            } else if (cat === 'verses') {
+                const textVal = document.getElementById('modalTextInput').value.trim();
+                const tagVal = document.getElementById('modalVerseTag').value;
+                if (!textVal) return;
+                val = { tag: tagVal, text: textVal };
+            } else {
+                val = document.getElementById('modalTextInput').value.trim();
+                if (!val) return;
+            }
+
+            if(!localQuranData[currentEditingSurahId]) localQuranData[currentEditingSurahId] = {};
+            if(!Array.isArray(localQuranData[currentEditingSurahId][cat])) localQuranData[currentEditingSurahId][cat] = [];
+            
+            if (editingItemIndex !== null) {
+                localQuranData[currentEditingSurahId][cat][editingItemIndex] = val;
+                editingItemIndex = null;
+                updateAddButtonLabel();
+            } else {
+                localQuranData[currentEditingSurahId][cat].push(val);
+            }
+            persist();
+            
+            document.getElementById('modalLinkTitle').value = '';
+            document.getElementById('modalLinkUrl').value = '';
+            document.getElementById('modalTextInput').value = '';
+            
+            renderModalItems(); 
+            showDetail(currentEditingSurahId); 
+            
+            const modalBody = document.querySelector('.overflow-y-auto');
+            modalBody.scrollTop = modalBody.scrollHeight;
+        }
+
+        function deleteModalItem(index) {
+            if (!confirm('هل تريد حذف هذا المُدخل؟')) return;
+            const cat = document.getElementById('modalCategorySelect').value;
+            localQuranData[currentEditingSurahId][cat].splice(index, 1);
+            persist();
+
+            editingItemIndex = null;
+            updateAddButtonLabel();
+            document.getElementById('modalLinkTitle').value = '';
+            document.getElementById('modalLinkUrl').value = '';
+            document.getElementById('modalTextInput').value = '';
+
+            renderModalItems(); 
+            showDetail(currentEditingSurahId); 
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                if (!document.getElementById('editModal').classList.contains('hidden')) {
+                    closeEditModal();
+                } else if (!document.getElementById('detailView').classList.contains('hidden')) {
+                    showMainView();
+                }
+            }
+        });
+
+        // ----- Backup / Restore -----
+        function exportData() {
+            if (!localQuranData || Object.keys(localQuranData).length === 0) {
+                alert('لا يوجد محتوى محفوظ لتصديره بعد.');
+                return;
+            }
+            const blob = new Blob([JSON.stringify(localQuranData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const stamp = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `hejaili-quran-backup-${stamp}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+                        throw new Error('invalid structure');
+                    }
+                    if (!confirm('سيؤدي الاستيراد إلى استبدال كل المحتوى الحالي بالنسخة المرفوعة. ننصح بأخذ نسخة احتياطية أولاً. هل تريد المتابعة؟')) {
+                        event.target.value = '';
+                        return;
+                    }
+                    localQuranData = parsed;
+                    if (persist()) {
+                        renderSurahs();
+                        if (currentEditingSurahId && !document.getElementById('detailView').classList.contains('hidden')) {
+                            showDetail(currentEditingSurahId);
+                        }
+                        alert('تم استيراد النسخة الاحتياطية بنجاح.');
+                    }
+                } catch (err) {
+                    alert('الملف غير صالح. تأكد من اختيار ملف نسخة احتياطية صحيح بصيغة JSON.');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // Initialize App
+        renderSurahs();
+
+    </script>
+</body>
+</html>
