@@ -7245,7 +7245,7 @@ function fieldCard(x, key, title, iconSvg, kind, iconColor){
     ? `<ol class="space-y-3">${items.map((v,i)=>itemRow(key,i,v,kind)).join('')}</ol>`
     : `<p class="text-brand-400 text-base">— لا توجد بيانات بعد. اضغط ＋ للإضافة. —</p>`;
   const editor = (addingTo===key) ? editorBox(key, kind) : '';
-  return `<article class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-paper-deep hover:border-gold-300 hover:shadow-md transition-all mb-4">
+  return `<article class="bg-paper-card p-4 md:p-5 rounded-2xl shadow-sm border border-paper-deep hover:border-gold-300 hover:shadow-md transition-all mb-4">
       <div class="flex items-center gap-2.5 mb-3">
         <span class="w-9 h-9 grid place-items-center rounded-lg bg-gold-50 border border-gold-100 ${ic}">${iconSvg}</span>
         <h3 class="font-naskh font-bold text-xl text-gold-700 flex-1">${title}</h3>
@@ -7319,7 +7319,7 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 $('#indexBtn').onclick=()=>{ addingTo=null; location.hash='#/'; };
-$('#hdrHome').onclick=()=>location.hash='#/';
+$('#hdrHome').onclick=()=>{ window.location.href='https://hejaili.com'; };
 $('#searchInput').addEventListener('input',e=>renderGrid(e.target.value));
 
 /* ---------- تطبيع البيانات: كل حقلٍ يصبح قائمة عناصر ---------- */
